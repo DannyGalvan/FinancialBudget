@@ -29,11 +29,11 @@
         /// <summary>
         /// Gets or sets the CreatedAt
         /// </summary>
-        DateTime CreatedAt { get; set; }
+        DateTimeOffset CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the UpdatedAt
         /// </summary>
-        DateTime? UpdatedAt { get; set; }
+        DateTimeOffset? UpdatedAt { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using FinancialBudget.Server.Services.Interfaces;
 using Lombok.NET;
 using Microsoft.Extensions.Options;
 
-namespace SoluEmpleo.Server.Services.Core
+namespace FinancialBudget.Server.Services.Core
 {
     /// <summary>
     /// Defines the <see cref="SendEmail" />

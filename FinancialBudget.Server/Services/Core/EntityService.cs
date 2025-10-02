@@ -1,15 +1,15 @@
-﻿using FluentValidation.Results;
+﻿using System.Linq.Expressions;
+using FinancialBudget.Server.Context;
+using FinancialBudget.Server.Entities.Interfaces;
+using FinancialBudget.Server.Entities.Response;
+using FinancialBudget.Server.Services.Interfaces;
+using FinancialBudget.Server.Utils;
+using FluentValidation.Results;
 using Lombok.NET;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using FinancialBudget.Server.Utils;
-using FinancialBudget.Server.Entities.Response;
-using FinancialBudget.Server.Services.Interfaces;
-using FinancialBudget.Server.Entities.Interfaces;
-using FinancialBudget.Server.Context;
 
-namespace Project.Server.Services.Core
+namespace FinancialBudget.Server.Services.Core
 {
     /// <summary>
     /// Defines the <see cref="EntityService{TEntity, TRequest, TId}" />
@@ -316,7 +316,7 @@ namespace Project.Server.Services.Core
 
                 userId = entity.CreatedBy.ToString();
 
-                DateTime createdAt = entityToUpdate.CreatedAt;
+                DateTimeOffset createdAt = entityToUpdate.CreatedAt;
 
                 Util.UpdateProperties(entityToUpdate, entity);
 
@@ -414,7 +414,7 @@ namespace Project.Server.Services.Core
 
                 userId = entity.CreatedBy.ToString();
 
-                DateTime createdAt = entityToUpdate.CreatedAt;
+                DateTimeOffset createdAt = entityToUpdate.CreatedAt;
                 Util.UpdateProperties(entityToUpdate, entity);
                 entityToUpdate.UpdatedAt = DateTime.Now;
                 entityToUpdate.CreatedAt = createdAt;

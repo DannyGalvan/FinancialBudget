@@ -2,17 +2,16 @@
 
 namespace FinancialBudget.Server.Entities.Models
 {
-    public class Rol : IEntity<long>
+    public class SplitType : IEntity<long>, ICatalogue
     {
         public long Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int State { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
         public long CreatedBy { get; set; }
         public long? UpdatedBy { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset? UpdatedAt { get; set; }
 
-        public virtual ICollection<User> Users { get; set; } = new List<User>();
-        public virtual ICollection<RolOperation> RolOperations { get; set; } = new List<RolOperation>();
+        public virtual ICollection<BudgetItem> BudgetItems { get; set; } = new List<BudgetItem>();
     }
 }

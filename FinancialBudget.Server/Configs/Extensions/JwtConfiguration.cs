@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Project.Server.Entities.Response;
+﻿using FinancialBudget.Server.Entities.Response;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FinancialBudget.Server.Configs.Extensions
 {

@@ -18,7 +18,7 @@
         {
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("EsiSchoolPayments"));
+                options.UseNpgsql(configuration.GetConnectionString("default"));
             });
 
             return services;

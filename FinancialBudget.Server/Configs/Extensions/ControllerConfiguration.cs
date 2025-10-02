@@ -1,4 +1,4 @@
-﻿using Project.Server.Entities.Response;
+﻿using FinancialBudget.Server.Entities.Response;
 
 namespace FinancialBudget.Server.Configs.Extensions
 {

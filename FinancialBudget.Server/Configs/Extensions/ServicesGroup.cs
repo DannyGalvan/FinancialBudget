@@ -1,5 +1,6 @@
 ﻿using FinancialBudget.Server.Services.Interfaces;
-using SoluEmpleo.Server.Services.Core;
+using AuthService = FinancialBudget.Server.Services.Core.AuthService;
+using SendEmail = FinancialBudget.Server.Services.Core.SendEmail;
 
 
 namespace FinancialBudget.Server.Configs.Extensions
