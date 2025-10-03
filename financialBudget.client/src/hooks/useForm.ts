@@ -1,10 +1,11 @@
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, FormEvent, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 
+import { addToast } from "@heroui/toast";
 import { useErrorsStore } from "../stores/useErrorsStore";
 import type { ApiResponse } from "../types/ApiResponse";
 import { ApiError } from "../types/errors";
-import type { ValidationFailure } from "../types/ValidationFailure";
+import { errorObjectToString } from "../utils/converted";
 import { useResponse } from "./useResponse";
 
 export interface ErrorObject {
@@ -13,8 +14,11 @@ export interface ErrorObject {
 
 export const useForm = <T, U>(
   initialForm: T,
-  validateForm: (form: T) => ErrorObject,
-  peticion: (form: T) => Promise<ApiResponse<U | ValidationFailure[]>>,
+  validateForm: (
+    form: T,
+    transformData: (data: SetStateAction<T>) => void,
+  ) => ErrorObject,
+  peticion: (form: T) => Promise<ApiResponse<U>>,
   reboot?: boolean,
 ) => {
   const { setError } = useErrorsStore();
@@ -27,7 +31,7 @@ export const useForm = <T, U>(
     fieldErrors,
     apiMessage,
     setErrorsResponse,
-  } = useResponse<U, ValidationFailure[]>();
+  } = useResponse<U>();
 
   useEffect(() => {
     setForm(initialForm);
@@ -42,31 +46,20 @@ export const useForm = <T, U>(
     };
 
     setForm(newForm);
-    setErrorsResponse(validateForm(newForm));
+    setErrorsResponse(validateForm(newForm, setForm));
   };
 
   const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
 
-    if (files != null) {
-      const newForm = {
-        ...form,
-        [name]: files[0],
-      };
+    const newForm = {
+      ...form,
+      [name]: files ? files[0] : null,
+    };
 
-      setForm(newForm);
+    setForm(newForm);
 
-      setErrorsResponse(validateForm(newForm));
-    } else {
-      const newForm = {
-        ...form,
-        [name]: null,
-      };
-
-      setForm(newForm);
-
-      setErrorsResponse(validateForm(newForm));
-    }
+    setErrorsResponse(validateForm(newForm, setForm));
   };
 
   const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,14 +70,7 @@ export const useForm = <T, U>(
     e.preventDefault();
     e.stopPropagation();
 
-    handleApiResponse({
-      success: null,
-      data: null,
-      message: "Error en la validación del formulario",
-      totalResults: 0,
-    });
-
-    const valErr = validateForm(form);
+    const valErr = validateForm(form, setForm);
     setErrorsResponse(valErr);
     setLoading(true);
 
@@ -92,13 +78,17 @@ export const useForm = <T, U>(
       try {
         const response = await peticion(form);
 
-        if (response.success) {
-          if (reboot) {
-            setForm(initialForm);
-          }
+        if (response.success && reboot) {
+          console.log("Rebooting form after successful submission");
+          // Reset form
           e.target.dispatchEvent(
-            new Event("reset", { bubbles: true, cancelable: true }),
+            new Event("reset", {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+            }),
           );
+          setForm(initialForm); // Reiniciar el formulario con los valores iniciales
         }
 
         handleApiResponse(response);
@@ -125,6 +115,11 @@ export const useForm = <T, U>(
         data: null,
         message: "Error en la validación del formulario",
         totalResults: 0,
+      });
+      addToast({
+        title: "Error",
+        description: errorObjectToString(fieldErrors),
+        color: "danger",
       });
     }
     setLoading(false);

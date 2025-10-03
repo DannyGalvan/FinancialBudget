@@ -4,7 +4,7 @@ import type { ValidationFailure } from "../types/ValidationFailure";
 import { toCamelCase } from "../utils/converted";
 import type { ErrorObject } from "./useForm";
 
-export const useResponse = <T, U>() => {
+export const useResponse = <T>() => {
   const [dataResult, setDataResult] = useState<T>();
   const [fieldErrors, setFieldErrors] = useState<ErrorObject>();
   const [apiMessage, setApiMessage] = useState<string>("");
@@ -26,17 +26,11 @@ export const useResponse = <T, U>() => {
     setFieldErrors(errors);
   };
 
-  const handleApiResponse = ({
-    data,
-    success,
-    message,
-  }: ApiResponse<T | U>) => {
+  const handleApiResponse = ({ data, success, message }: ApiResponse<T>) => {
     if (success) {
-      setDataResult(data as T);
+      setDataResult(data);
     } else {
-      mapValidationFailuresToFieldErrors(
-        (data as unknown as ValidationFailure[]) ?? [],
-      );
+      mapValidationFailuresToFieldErrors(data ?? []);
     }
     setSuccess(success);
     setApiMessage(message!);

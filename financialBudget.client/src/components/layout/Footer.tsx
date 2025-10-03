@@ -5,7 +5,8 @@ export function Footer() {
   return (
     <footer>
       <strong className="text-sky-800">
-        <Link to={nameRoutes.root}>Copyright &copy; 2024 Tass</Link> .{" "}
+        <Link to={nameRoutes.root}>Copyright &copy; 2024 Vitali Alimentos</Link>{" "}
+        .{" "}
       </strong>
       Todos los derechos reservados.
       <div className="hidden sm:inline-block float-right">

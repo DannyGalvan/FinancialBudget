@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Footer } from "../components/layout/Footer";
+import { Sidebar } from "../components/layout/Sidebar";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -9,6 +10,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex">
+      <Sidebar />
       <div
         className="h-screen flex-1 overflow-auto px-4 py-0 pt-5 scrollbar-track-sky-400 scrollbar-thumb-indigo-50 md:static"
         id="scroll"

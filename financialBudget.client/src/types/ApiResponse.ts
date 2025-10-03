@@ -1,4 +1,5 @@
 import type { Authorizations } from "./Authorizations";
+import type { ValidationFailure } from "./ValidationFailure";
 
 export interface AuthResponse {
   name: string;
@@ -14,12 +15,12 @@ export type ApiResponse<T> =
   | {
       success: true;
       data: T;
-      message?: string;
+      message: string;
       totalResults: number;
     }
   | {
-      success: false | null;
-      data: null;
-      message?: string;
+      success: false;
+      data: ValidationFailure[] | null;
+      message: string;
       totalResults: number;
     };
