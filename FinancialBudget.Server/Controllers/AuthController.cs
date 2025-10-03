@@ -1,6 +1,4 @@
-﻿using FinancialBudget.Server.Controllers;
-using FinancialBudget.Server.Entities.Models;
-using FinancialBudget.Server.Entities.Request;
+﻿using FinancialBudget.Server.Entities.Request;
 using FinancialBudget.Server.Entities.Response;
 using FinancialBudget.Server.Services.Interfaces;
 using FluentValidation.Results;
@@ -9,7 +7,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Project.Server.Controllers
+namespace FinancialBudget.Server.Controllers
 {
     /// <summary>
     /// Defines the <see cref="AuthController" />

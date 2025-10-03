@@ -14,6 +14,12 @@ namespace FinancialBudget.Server.Mappers
             MapperBudget();
             MapperModules();
             MapperUser();
+            MapperCatalogues();
+        }
+
+        private static void MapperCatalogues()
+        {
+
         }
 
         private static void MapperBudget()

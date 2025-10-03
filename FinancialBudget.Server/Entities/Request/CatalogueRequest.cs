@@ -1,6 +1,13 @@
-﻿namespace FinancialBudget.Server.Entities.Request
+﻿using FinancialBudget.Server.Entities.Interfaces;
+
+namespace FinancialBudget.Server.Entities.Request
 {
-    public class CatalogueRequest
+    public class CatalogueRequest : IRequest<string?>, ICatalogue
     {
+        public string? Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int State { get; set; } = 1;
+        public long? CreatedBy { get; set; }
+        public long? UpdatedBy { get; set; }
     }
 }
