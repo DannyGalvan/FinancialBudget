@@ -41,12 +41,6 @@ if (!existsSync(certFilePath) || !existsSync(keyFilePath)) {
   }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT
-  ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
-  : env.ASPNETCORE_URLS
-    ? env.ASPNETCORE_URLS.split(";")[0]
-    : "https://localhost:7266";
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [viteReact()],
@@ -57,9 +51,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "^/weatherforecast": {
-        target,
+      "/api": {
+        target: "https://localhost:7266/api",
+        changeOrigin: true,
         secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
     port: 60263,

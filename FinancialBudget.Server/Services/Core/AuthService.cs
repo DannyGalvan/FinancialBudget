@@ -103,16 +103,29 @@ namespace FinancialBudget.Server.Services.Core
 
                 List<Operation> operationsRol = _mapper.Map<List<RolOperation>, List<Operation>>(rolOperations);
 
-                var modules =
-                    _bd.Modules
-                        .FromSql($"""
-                                  select Id,Name,Description,Image,Path,State,CreatedAt,UpdatedAt,CreatedBy,UpdatedBy from (select ModuleId from RolOperations ro 
-                                                                                                      inner join Operations o on o.Id = ro.OperationId
-                                                                                                      inner join Modules m on o.ModuleId = m.Id
-                                                                                                      where ro.RolId = {oUser.RolId} and ro.state = 1                
-                                                                                                      group by ModuleId) as mod
-                                                                                                      inner join Modules mo on mod.ModuleId = mo.Id
-                                  """).ToList();
+                var modules = _bd.Modules
+                    .FromSql($"""
+                                  SELECT 
+                                       mo."Id", 
+                                       mo."Name", 
+                                       mo."Image", 
+                                       mo."Path", 
+                                       mo."State", 
+                                       mo."CreatedAt", 
+                                       mo."UpdatedAt", 
+                                       mo."CreatedBy", 
+                                       mo."UpdatedBy"
+                                  FROM (
+                                      SELECT o."ModuleId"
+                                      FROM "RolOperations" ro
+                                      INNER JOIN "Operations" o ON o."Id" = ro."OperationId"
+                                      INNER JOIN "Modules" m ON o."ModuleId" = m."Id"
+                                      WHERE ro."RolId" = {oUser.RolId} AND ro."State" = 1
+                                      GROUP BY o."ModuleId"
+                                  ) AS mod
+                                  INNER JOIN "Modules" mo ON mod."ModuleId" = mo."Id"
+                              """)
+                    .ToList();
 
 
                 List<Authorizations> authorizations = modules
