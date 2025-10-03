@@ -1,4 +1,6 @@
-﻿namespace FinancialBudget.Server.Configs.Extensions
+﻿using FinancialBudget.Server.Validations.BudgetValidators;
+
+namespace FinancialBudget.Server.Configs.Extensions
 {
     using FinancialBudget.Server.Entities.Request;
     using FinancialBudget.Server.Validations.Auth;
@@ -22,6 +24,11 @@
             services.AddScoped<IValidator<ResetPasswordRequest>, ResetPasswordValidations>();
             services.AddScoped<IValidator<RecoveryPasswordRequest>, RecoveryPasswordValidations>();
             services.AddScoped<IValidator<RegisterRequest>, RegisterValidations>();
+
+            //budget validations
+            services.AddKeyedScoped<IValidator<BudgetRequest>, CreateBudgetValidator>("Create");
+            services.AddKeyedScoped<IValidator<BudgetRequest>, UpdateBudgetValidator>("Update");
+            services.AddKeyedScoped<IValidator<BudgetRequest>, PartialBudgetValidator>("Partial");
 
             return services;
         }

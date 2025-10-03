@@ -7,7 +7,43 @@ namespace FinancialBudget.Server.Mappers
 {
     public abstract class MapsterConfig
     {
+
         public static void RegisterMappings()
+        {
+
+            MapperBudget();
+            MapperModules();
+            MapperUser();
+        }
+
+        private static void MapperBudget()
+        {
+            TypeAdapterConfig<BudgetRequest, Budget>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.AuthorizedAmount, src => src.AuthorizedAmount)
+                .Map(dest => dest.AvailableAmount, src => src.AvailableAmount)
+                .Map(dest => dest.CommittedAmount, src => 0)
+                .Map(dest => dest.Period, src => src.Period)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<Budget, BudgetResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.AuthorizedAmount, src => src.AuthorizedAmount)
+                .Map(dest => dest.AvailableAmount, src => src.AvailableAmount)
+                .Map(dest => dest.CommittedAmount, src => src.CommittedAmount)
+                .Map(dest => dest.Period, src => src.Period)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null);
+
+            TypeAdapterConfig<Budget, Budget>.NewConfig();
+        }
+
+        private static void MapperUser()
         {
             //Mapper User
             TypeAdapterConfig<RegisterRequest, User>.NewConfig()
@@ -29,7 +65,7 @@ namespace FinancialBudget.Server.Mappers
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
                 .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
                 .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy " +
-                "HH:mm:ss") : null);
+                    "HH:mm:ss") : null);
 
             TypeAdapterConfig<User, AuthResponse>.NewConfig()
                 .Map(dest => dest.Email, src => src.Email)
@@ -40,8 +76,10 @@ namespace FinancialBudget.Server.Mappers
                 .Ignore(dest => dest.Operations);
 
             TypeAdapterConfig<User, User>.NewConfig();
+        }
 
-
+        private static void MapperModules()
+        {
             //Mapper Rol
             TypeAdapterConfig<Rol, RolResponse>.NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
@@ -110,5 +148,7 @@ namespace FinancialBudget.Server.Mappers
                 .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
                 .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null);
         }
+
+
     }
 }

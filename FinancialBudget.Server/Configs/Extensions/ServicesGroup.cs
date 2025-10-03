@@ -1,4 +1,8 @@
-﻿using FinancialBudget.Server.Services.Interfaces;
+﻿using FinancialBudget.Server.Entities.Models;
+using FinancialBudget.Server.Entities.Request;
+using FinancialBudget.Server.Services.Core;
+using FinancialBudget.Server.Services.Interfaces;
+using FinancialBudget.Server.Utils;
 using AuthService = FinancialBudget.Server.Services.Core.AuthService;
 using SendEmail = FinancialBudget.Server.Services.Core.SendEmail;
 
@@ -20,6 +24,12 @@ namespace FinancialBudget.Server.Configs.Extensions
         {
             // entities services
             services.AddScoped<IAuthService, AuthService>();
+
+            services.AddScoped<IEntityService<Budget,BudgetRequest,long>, EntityService<Budget,BudgetRequest,long>>();
+
+            // util services
+            services.AddScoped<IEntitySupportService, EntitySupportService>();
+            services.AddScoped<IFilterTranslator, FilterTranslator>();
 
             // other services
             services.AddScoped<ISendMail, SendEmail>();
