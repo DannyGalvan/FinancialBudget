@@ -58,12 +58,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://localhost:7266/api",
+        target: "http://localhost:5175/api",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
-    },
+    }, 
     port: 60263,
     https: {
       key: readFileSync(keyFilePath),
