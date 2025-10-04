@@ -1,4 +1,5 @@
 ﻿using FinancialBudget.Server.Validations.BudgetValidators;
+using FinancialBudget.Server.Validations.RequestValidators;
 
 namespace FinancialBudget.Server.Configs.Extensions
 {
@@ -35,6 +36,11 @@ namespace FinancialBudget.Server.Configs.Extensions
             services.AddKeyedScoped<IValidator<BudgetRequest>, CreateBudgetValidator>("Create");
             services.AddKeyedScoped<IValidator<BudgetRequest>, UpdateBudgetValidator>("Update");
             services.AddKeyedScoped<IValidator<BudgetRequest>, PartialBudgetValidator>("Partial");
+
+            //request validations
+            services.AddKeyedScoped<IValidator<RequestRequest>, CreateRequestValidations>("Create");
+            services.AddKeyedScoped<IValidator<RequestRequest>, UpdateRequestValidation>("Update");
+            services.AddKeyedScoped<IValidator<RequestRequest>, PartialRequestValidator>("Partial");
 
             return services;
         }

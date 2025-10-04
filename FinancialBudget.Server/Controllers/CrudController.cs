@@ -72,7 +72,7 @@ namespace FinancialBudget.Server.Controllers
         public virtual IActionResult Create([FromBody] TRequest request)
         {
             AuditHelper.SetCreatedByRecursive(request, GetUserId());
-
+                
             var response = service.Create(request);
 
             if (response.Success)

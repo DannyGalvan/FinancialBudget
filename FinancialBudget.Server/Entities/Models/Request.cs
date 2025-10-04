@@ -11,7 +11,7 @@ namespace FinancialBudget.Server.Entities.Models
         public string Reason { get; set; } = string.Empty;
         public DateTimeOffset RequestDate { get; set; }
         public long RequestStatusId { get; set; }
-        public DateTimeOffset ApprovedDate { get; set; }
+        public DateTimeOffset? ApprovedDate { get; set; }
         public string Email { get; set; } = string.Empty;
         public string RejectionReason { get; set; } = string.Empty;
         public string AuthorizedReason { get; set; } = string.Empty;
