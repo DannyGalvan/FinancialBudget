@@ -2,6 +2,7 @@
 {
     using FinancialBudget.Server.Entities.Request;
     using FinancialBudget.Server.Validations.Auth;
+    using FinancialBudget.Server.Validations.BudgetItemValidators;
     using FluentValidation;
 
     /// <summary>
@@ -23,6 +24,22 @@
             services.AddScoped<IValidator<RecoveryPasswordRequest>, RecoveryPasswordValidations>();
             services.AddScoped<IValidator<RegisterRequest>, RegisterValidations>();
 
+<<<<<<< Updated upstream
+=======
+            //budget validations
+            services.AddKeyedScoped<IValidator<BudgetRequest>, CreateBudgetValidator>("Create");
+            services.AddKeyedScoped<IValidator<BudgetRequest>, UpdateBudgetValidator>("Update");
+            services.AddKeyedScoped<IValidator<BudgetRequest>, PartialBudgetValidator>("Partial");
+
+            //budgetItem
+            // BudgetItem validations
+            services.AddKeyedScoped<IValidator<BudgetItemRequest>, BudgetItemValidator>("Create");
+            services.AddKeyedScoped<IValidator<BudgetItemRequest>, BudgetItemValidator>("Update");
+            services.AddKeyedScoped<IValidator<BudgetItemRequest>, BudgetItemValidator>("Partial");
+
+
+
+>>>>>>> Stashed changes
             return services;
         }
 

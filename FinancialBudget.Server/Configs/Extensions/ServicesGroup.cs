@@ -21,6 +21,18 @@ namespace FinancialBudget.Server.Configs.Extensions
             // entities services
             services.AddScoped<IAuthService, AuthService>();
 
+<<<<<<< Updated upstream
+=======
+            services.AddScoped<IEntityService<Budget,BudgetRequest,long>, EntityService<Budget,BudgetRequest,long>>();
+
+            //budgetitem
+            services.AddScoped<IEntityService<BudgetItem, BudgetItemRequest, long>, EntityService<BudgetItem, BudgetItemRequest, long>>();
+
+            // util services
+            services.AddScoped<IEntitySupportService, EntitySupportService>();
+            services.AddScoped<IFilterTranslator, FilterTranslator>();
+
+>>>>>>> Stashed changes
             // other services
             services.AddScoped<ISendMail, SendEmail>();
 
