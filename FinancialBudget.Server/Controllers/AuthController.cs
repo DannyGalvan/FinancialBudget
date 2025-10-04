@@ -28,7 +28,7 @@
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// The Login
+        /// Autenticar un usuario, obtener un token JWT, es necesario para acceder a los endpoints protegidos
         /// </summary>
         /// <param name="model">The model<see cref="LoginRequest"/></param>
         /// <returns>The <see cref="ActionResult"/></returns>
