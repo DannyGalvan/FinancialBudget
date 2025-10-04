@@ -1,4 +1,5 @@
 using FinancialBudget.Server.Entities.Interfaces;
+using FinancialBudget.Server.Entities.Request;
 using FinancialBudget.Server.Entities.Response;
 using FinancialBudget.Server.Services.Interfaces;
 using FinancialBudget.Server.Utils;
@@ -9,31 +10,25 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinancialBudget.Server.Controllers
 {
     [ApiController]
-    public abstract class CrudController<TEntity, TRequest, TResponse, TId> : CommonController
-     where TEntity : class
-     where TRequest : class, IRequest<TId?>
-     where TId : struct
+    public abstract class CrudController<TEntity, TRequest, TResponse, TId>(
+      IEntityService<TEntity, TRequest, TId> service,
+      IMapper mapper)
+      : CommonController
+      where TEntity : class
+      where TRequest : class, IRequest<TId?>
+      where TId : struct
     {
-        protected readonly IEntityService<TEntity, TRequest, TId> _service;
-        protected readonly IMapper _mapper;
-
-        protected CrudController(IEntityService<TEntity, TRequest, TId> service, IMapper mapper)
-        {
-            _service = service;
-            _mapper = mapper;
-        }
-
         [HttpGet]
-        public virtual IActionResult GetAll([FromQuery] string? filters, string? include = null, int pageNumber = 1, int pageSize = 30, bool includeTotal = false)
+        public virtual IActionResult GetAll([FromQuery] QueryParamsRequest query)
         {
-            string[]? inc = include?.Split(",");
-            var response = _service.GetAll(filters, inc, pageNumber, pageSize, includeTotal);
+            string[]? inc = query.Include?.Split(",");
+            var response = service.GetAll(query.Filters, inc, query.PageNumber, query.PageSize, query.IncludeTotal);
 
             if (response.Success)
             {
                 return Ok(new Response<List<TResponse>>
                 {
-                    Data = _mapper.Map<List<TEntity>, List<TResponse>>(response.Data!),
+                    Data = mapper.Map<List<TEntity>, List<TResponse>>(response.Data!),
                     Success = response.Success,
                     Message = response.Message,
                     TotalResults = response.TotalResults
@@ -49,15 +44,17 @@ namespace FinancialBudget.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual IActionResult Get(TId id)
+        public virtual IActionResult Get(TId id, [FromQuery] string? include = null)
         {
-            var response = _service.GetById(id);
+            string[]? inc = include?.Split(",");
+
+            var response = service.GetById(id, inc);
 
             if (response.Success)
             {
                 return Ok(new Response<TResponse>
                 {
-                    Data = _mapper.Map<TEntity, TResponse>(response.Data!),
+                    Data = mapper.Map<TEntity, TResponse>(response.Data!),
                     Success = true,
                     Message = response.Message
                 });
@@ -75,14 +72,14 @@ namespace FinancialBudget.Server.Controllers
         public virtual IActionResult Create([FromBody] TRequest request)
         {
             AuditHelper.SetCreatedByRecursive(request, GetUserId());
-
-            var response = _service.Create(request);
+                
+            var response = service.Create(request);
 
             if (response.Success)
             {
                 return Ok(new Response<TResponse>
                 {
-                    Data = _mapper.Map<TEntity, TResponse>(response.Data!),
+                    Data = mapper.Map<TEntity, TResponse>(response.Data!),
                     Success = true,
                     Message = response.Message
                 });
@@ -102,13 +99,13 @@ namespace FinancialBudget.Server.Controllers
 
             AuditHelper.SetUpdatedByRecursive(request, GetUserId());
 
-            var response = _service.Update(request);
+            var response = service.Update(request);
 
             if (response.Success)
             {
                 return Ok(new Response<TResponse>
                 {
-                    Data = _mapper.Map<TEntity, TResponse>(response.Data!),
+                    Data = mapper.Map<TEntity, TResponse>(response.Data!),
                     Success = true,
                     Message = response.Message
                 });
@@ -128,13 +125,13 @@ namespace FinancialBudget.Server.Controllers
 
             AuditHelper.SetUpdatedByRecursive(request, GetUserId());
 
-            var response = _service.PartialUpdate(request);
+            var response = service.PartialUpdate(request);
 
             if (response.Success)
             {
                 return Ok(new Response<TResponse>
                 {
-                    Data = _mapper.Map<TEntity, TResponse>(response.Data!),
+                    Data = mapper.Map<TEntity, TResponse>(response.Data!),
                     Success = true,
                     Message = response.Message
                 });
@@ -151,13 +148,13 @@ namespace FinancialBudget.Server.Controllers
         [HttpDelete("{id}")]
         public virtual IActionResult Delete(TId id)
         {
-            var response = _service.Delete(id, GetUserId());
+            var response = service.Delete(id, GetUserId());
 
             if (response.Success)
             {
                 return Ok(new Response<TResponse>
                 {
-                    Data = _mapper.Map<TEntity, TResponse>(response.Data!),
+                    Data = mapper.Map<TEntity, TResponse>(response.Data!),
                     Success = true,
                     Message = response.Message
                 });

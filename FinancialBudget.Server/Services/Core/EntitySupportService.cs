@@ -24,6 +24,13 @@ namespace FinancialBudget.Server.Services.Core
                 .OrderBy(i => i.GetType().GetCustomAttribute<OrderAttribute>()?.Priority ?? int.MaxValue);
         }
 
+        public IEnumerable<IEntityBeforeUpdateInterceptor<TEntity, TRequest>> GetBeforeUpdateInterceptors<TEntity, TRequest>()
+        {
+            return _serviceProvider
+                .GetServices<IEntityBeforeUpdateInterceptor<TEntity, TRequest>>()
+                .OrderBy(i => i.GetType().GetCustomAttribute<OrderAttribute>()?.Priority ?? int.MaxValue);
+        }
+
         public IEnumerable<IEntityAfterCreateInterceptor<TEntity, TRequest>> GetAfterCreateInterceptors<TEntity, TRequest>()
         {
             return _serviceProvider

@@ -14,6 +14,128 @@ namespace FinancialBudget.Server.Mappers
             MapperBudget();
             MapperModules();
             MapperUser();
+            MapperCatalogues();
+            MapperRequest();
+        }
+
+        private static void MapperRequest()
+        {
+            TypeAdapterConfig<RequestRequest, Request>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Reason, src => src.Reason)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.OriginId, src => src.OriginId)
+                .Map(dest => dest.RequestAmount, src => src.RequestAmount)
+                .Map(dest => dest.RequestStatusId, src => src.RequestStatusId)
+                .Map(dest => dest.PriorityId, src => src.PriorityId)
+                .Map(dest => dest.RequestDate, src => string.IsNullOrEmpty(src.RequestDate) ? DateTime.Now : DateTime.ParseExact(src.RequestDate, "yyyy-MM-dd", null))
+                .Map(dest => dest.ApprovedDate, src => string.IsNullOrEmpty(src.ApprovedDate) ? DateTime.Now : DateTime.ParseExact(src.ApprovedDate, "yyyy-MM-dd", null))
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.RejectionReason, src => src.RejectionReason)
+                .Map(dest => dest.AuthorizedReason, src => src.AuthorizedReason)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<Request, RequestResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Reason, src => src.Reason)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.OriginId, src => src.OriginId)
+                .Map(dest => dest.RequestAmount, src => src.RequestAmount)
+                .Map(dest => dest.RequestStatusId, src => src.RequestStatusId)
+                .Map(dest => dest.PriorityId, src => src.PriorityId)
+                .Map(dest => dest.RequestDate, src => src.RequestDate.ToString("dd/MM/yyyy"))
+                .Map(dest => dest.ApprovedDate, src => src.ApprovedDate.HasValue ? src.ApprovedDate.Value.ToString("dd/MM/yyyy") : null)
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.RejectionReason, src => src.RejectionReason)
+                .Map(dest => dest.AuthorizedReason, src => src.AuthorizedReason)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null)
+                .Map(dest => dest.Origin, src => src.Origin != null ? src.Origin.Adapt<CatalogueResponse>() : null)
+                .Map(dest => dest.RequestStatus, src => src.RequestStatus != null ? src.RequestStatus.Adapt<CatalogueResponse>() : null)
+                .Map(dest => dest.Priority, src => src.Priority != null ? src.Priority.Adapt<CatalogueResponse>() : null);
+
+            TypeAdapterConfig<Request, Request>.NewConfig();
+
+        }
+
+        private static void MapperCatalogues()
+        {
+            TypeAdapterConfig<CatalogueRequest, Origin>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<Origin, CatalogueResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null);
+
+            TypeAdapterConfig<Origin, Origin>.NewConfig();
+
+            TypeAdapterConfig<CatalogueRequest, SplitType>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<SplitType, CatalogueResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null);
+
+            TypeAdapterConfig<SplitType, SplitType>.NewConfig();
+
+            TypeAdapterConfig<CatalogueRequest, RequestStatus>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<RequestStatus, CatalogueResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null);
+
+            TypeAdapterConfig<RequestStatus, RequestStatus>.NewConfig();
+
+            TypeAdapterConfig<CatalogueRequest, Priority>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<Priority, CatalogueResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null);
+
+            TypeAdapterConfig<Priority, Priority>.NewConfig();
         }
 
         private static void MapperBudget()

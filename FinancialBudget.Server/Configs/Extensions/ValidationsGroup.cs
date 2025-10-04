@@ -1,9 +1,11 @@
 ﻿using FinancialBudget.Server.Validations.BudgetValidators;
+using FinancialBudget.Server.Validations.RequestValidators;
 
 namespace FinancialBudget.Server.Configs.Extensions
 {
     using FinancialBudget.Server.Entities.Request;
     using FinancialBudget.Server.Validations.Auth;
+    using FinancialBudget.Server.Validations.CatalogueValidators;
     using FluentValidation;
 
     /// <summary>
@@ -25,10 +27,20 @@ namespace FinancialBudget.Server.Configs.Extensions
             services.AddScoped<IValidator<RecoveryPasswordRequest>, RecoveryPasswordValidations>();
             services.AddScoped<IValidator<RegisterRequest>, RegisterValidations>();
 
+            //catalogue validations
+            services.AddKeyedScoped<IValidator<CatalogueRequest>, CreateCatalogueValidator>("Create");
+            services.AddKeyedScoped<IValidator<CatalogueRequest>, UpdateCatalogueValidator>("Update");
+            services.AddKeyedScoped<IValidator<CatalogueRequest>, PartialCatalogueValidator>("Partial");
+
             //budget validations
             services.AddKeyedScoped<IValidator<BudgetRequest>, CreateBudgetValidator>("Create");
             services.AddKeyedScoped<IValidator<BudgetRequest>, UpdateBudgetValidator>("Update");
             services.AddKeyedScoped<IValidator<BudgetRequest>, PartialBudgetValidator>("Partial");
+
+            //request validations
+            services.AddKeyedScoped<IValidator<RequestRequest>, CreateRequestValidations>("Create");
+            services.AddKeyedScoped<IValidator<RequestRequest>, UpdateRequestValidation>("Update");
+            services.AddKeyedScoped<IValidator<RequestRequest>, PartialRequestValidator>("Partial");
 
             return services;
         }
