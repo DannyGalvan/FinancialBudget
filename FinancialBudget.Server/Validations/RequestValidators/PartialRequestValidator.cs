@@ -41,11 +41,6 @@ namespace FinancialBudget.Server.Validations.RequestValidators
                     .NotEmpty().WithMessage("La fecha de la solicitud no puede ser vacio")
                     .NotNull().WithMessage("La fecha de la solicitud no puede ser nulo");
             });
-            When(x => x.RequestStatusId != 0, () =>
-            {
-                RuleFor(x => x.RequestStatusId)
-                    .GreaterThan(0).WithMessage("El Id del estado de la solicitud debe ser mayor a 0");
-            });
             When(x => x.Email is not null, () =>
             {
                 RuleFor(x => x.Email)
@@ -64,8 +59,7 @@ namespace FinancialBudget.Server.Validations.RequestValidators
             {
                 RuleFor(x => x.State)
                     .NotNull().WithMessage("El estado no puede ser nulo")
-                    .NotEmpty().WithMessage("El estado no puede ser vacio")
-                    .GreaterThanOrEqualTo(0).WithMessage("El estado debe ser mayor o igual a 0");
+                    .NotEmpty().WithMessage("El estado es necesario");
             });
         }
     }

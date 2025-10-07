@@ -16,6 +16,40 @@ namespace FinancialBudget.Server.Mappers
             MapperUser();
             MapperCatalogues();
             MapperRequest();
+            MapperBudgetItem();
+        }
+
+        private static void MapperBudgetItem()
+        {
+            TypeAdapterConfig<BudgetItemRequest, BudgetItem>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.BudgetId, src => src.BudgetId)
+                .Map(dest => dest.Amount, src => src.Amount)
+                .Map(dest => dest.OriginId, src => src.OriginId)
+                .Map(dest => dest.SplitTypeId, src => src.SplitTypeId)
+                .Map(dest => dest.RequestId, src => src.RequestId)
+                .Map(dest => dest.State, src => 1)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
+
+            TypeAdapterConfig<BudgetItem, BudgetItemResponse>.NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.BudgetId, src => src.BudgetId)
+                .Map(dest => dest.Amount, src => src.Amount)
+                .Map(dest => dest.OriginId, src => src.OriginId)
+                .Map(dest => dest.SplitTypeId, src => src.SplitTypeId)
+                .Map(dest => dest.RequestId, src => src.RequestId)
+                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.UpdatedBy, src => src.UpdatedBy)
+                .Map(dest => dest.CreatedAt, src => src.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"))
+                .Map(dest => dest.UpdatedAt, src => src.UpdatedAt.HasValue ? src.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : null)
+                .Map(dest => dest.Budget, src => src.Budget != null ? src.Budget.Adapt<BudgetResponse>() : null)
+                .Map(dest => dest.Origin, src => src.Origin != null ? src.Origin.Adapt<CatalogueResponse>() : null)
+                .Map(dest => dest.SplitType, src => src.SplitType != null ? src.SplitType.Adapt<CatalogueResponse>() : null)
+                .Map(dest => dest.Request, src => src.Request != null ? src.Request.Adapt<RequestResponse>() : null);
+
+            TypeAdapterConfig<BudgetItem, BudgetItem>.NewConfig();
         }
 
         private static void MapperRequest()
@@ -26,14 +60,11 @@ namespace FinancialBudget.Server.Mappers
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.OriginId, src => src.OriginId)
                 .Map(dest => dest.RequestAmount, src => src.RequestAmount)
-                .Map(dest => dest.RequestStatusId, src => src.RequestStatusId)
+                .Map(dest => dest.RequestStatusId, src => 1)
                 .Map(dest => dest.PriorityId, src => src.PriorityId)
                 .Map(dest => dest.RequestDate, src => string.IsNullOrEmpty(src.RequestDate) ? DateTime.Now : DateTime.ParseExact(src.RequestDate, "yyyy-MM-dd", null))
-                .Map(dest => dest.ApprovedDate, src => string.IsNullOrEmpty(src.ApprovedDate) ? DateTime.Now : DateTime.ParseExact(src.ApprovedDate, "yyyy-MM-dd", null))
                 .Map(dest => dest.Email, src => src.Email)
-                .Map(dest => dest.RejectionReason, src => src.RejectionReason)
-                .Map(dest => dest.AuthorizedReason, src => src.AuthorizedReason)
-                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
 
@@ -68,7 +99,7 @@ namespace FinancialBudget.Server.Mappers
             TypeAdapterConfig<CatalogueRequest, Origin>.NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
 
@@ -86,7 +117,7 @@ namespace FinancialBudget.Server.Mappers
             TypeAdapterConfig<CatalogueRequest, SplitType>.NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
 
@@ -104,7 +135,7 @@ namespace FinancialBudget.Server.Mappers
             TypeAdapterConfig<CatalogueRequest, RequestStatus>.NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
 
@@ -122,7 +153,7 @@ namespace FinancialBudget.Server.Mappers
             TypeAdapterConfig<CatalogueRequest, Priority>.NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
 
@@ -146,7 +177,7 @@ namespace FinancialBudget.Server.Mappers
                 .Map(dest => dest.AvailableAmount, src => src.AvailableAmount)
                 .Map(dest => dest.CommittedAmount, src => 0)
                 .Map(dest => dest.Period, src => src.Period)
-                .Map(dest => dest.State, src => src.State)
+                .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
                 .Map(dest => dest.UpdatedBy, src => src.UpdatedBy);
 

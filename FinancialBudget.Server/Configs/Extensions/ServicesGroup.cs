@@ -24,6 +24,8 @@ namespace FinancialBudget.Server.Configs.Extensions
 
             services
                 .AddScoped<IEntityService<Budget,BudgetRequest,long>, EntityService<Budget,BudgetRequest,long>>();
+            services 
+                .AddScoped<IEntityService<BudgetItem, BudgetItemRequest, long>, EntityService<BudgetItem, BudgetItemRequest, long>>();
             services
                 .AddScoped<IEntityService<Request, RequestRequest, long>, EntityService<Request, RequestRequest, long>>();
 

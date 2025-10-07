@@ -22,10 +22,6 @@ namespace FinancialBudget.Server.Validations.BudgetValidators
             RuleFor(x => x.Period)
                 .NotNull().WithMessage("El Periodo no puede ser nulo")
                 .GreaterThan(0).WithMessage("El Periodo debe ser mayor a 0");
-
-            RuleFor(x => x.State)
-                .NotNull().WithMessage("El Estado no puede ser nulo")
-                .InclusiveBetween(0, 1).WithMessage("El Estado debe ser 0 (Inactivo) o 1 (Activo)");
         }
     }
 }
