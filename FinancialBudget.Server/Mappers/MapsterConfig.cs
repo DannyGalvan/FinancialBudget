@@ -60,7 +60,7 @@ namespace FinancialBudget.Server.Mappers
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.OriginId, src => src.OriginId)
                 .Map(dest => dest.RequestAmount, src => src.RequestAmount)
-                .Map(dest => dest.RequestStatusId, src => 1)
+                .Map(dest => dest.RequestStatusId, src => src.RequestStatusId ?? 1)
                 .Map(dest => dest.PriorityId, src => src.PriorityId)
                 .Map(dest => dest.RequestDate, src => string.IsNullOrEmpty(src.RequestDate) ? DateTime.Now : DateTime.ParseExact(src.RequestDate, "yyyy-MM-dd", null))
                 .Map(dest => dest.Email, src => src.Email)

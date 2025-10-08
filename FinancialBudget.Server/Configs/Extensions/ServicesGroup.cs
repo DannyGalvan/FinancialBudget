@@ -1,8 +1,13 @@
 ﻿using FinancialBudget.Server.Entities.Models;
 using FinancialBudget.Server.Entities.Request;
+using FinancialBudget.Server.Filters;
+using FinancialBudget.Server.Interceptors.Interfaces;
+using FinancialBudget.Server.Interceptors.RequestInterceptors;
+using FinancialBudget.Server.Services.Business;
 using FinancialBudget.Server.Services.Core;
 using FinancialBudget.Server.Services.Interfaces;
 using FinancialBudget.Server.Utils;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FinancialBudget.Server.Configs.Extensions
 {
@@ -28,6 +33,7 @@ namespace FinancialBudget.Server.Configs.Extensions
                 .AddScoped<IEntityService<BudgetItem, BudgetItemRequest, long>, EntityService<BudgetItem, BudgetItemRequest, long>>();
             services
                 .AddScoped<IEntityService<Request, RequestRequest, long>, EntityService<Request, RequestRequest, long>>();
+            services.AddScoped<IAuthorizationRequestFlow, AuthorizationRequestFlow>();
 
             // catalogue services
             services
@@ -47,8 +53,15 @@ namespace FinancialBudget.Server.Configs.Extensions
             services.AddScoped<IEntitySupportService, EntitySupportService>();
             services.AddScoped<IFilterTranslator, FilterTranslator>();
 
+            // interceptors
+            services.AddScoped<IEntityAfterCreateInterceptor<Request, RequestRequest>, InitialTraceabilityAndSendMail>();
+            services.AddScoped<IEntityAfterUpdateInterceptor<Request, RequestRequest>, UpdateFlowTraceabilityAndSendMail>();
+            services.AddScoped<IEntityAfterPartialUpdateInterceptor<Request, RequestRequest>, PartialFlowTraceabilityAndSendMail>();
+
             // other services
             services.AddScoped<ISendMail, SendEmail>();
+            services.AddSingleton<IAuthorizationHandler, MultipleClaimsHandler>();
+
 
             return services;
         }

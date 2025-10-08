@@ -5,7 +5,8 @@ namespace FinancialBudget.Server.Entities.Models
     public class Traceability : IEntity<long>
     {
         public long Id { get; set; }
-        public long UserId { get; set; }
+        public long CreateUserId { get; set; }
+        public long AuthorizeUserId { get; set; }
         public long RequestId { get; set; }
         public long RequestStatusId { get; set; }
         public string Comments { get; set; } = string.Empty;
@@ -16,7 +17,8 @@ namespace FinancialBudget.Server.Entities.Models
         public DateTimeOffset? UpdatedAt { get; set; }
 
 
-        public User? User { get; set; }
+        public User? CreateUser { get; set; }
+        public User? AuthorizeUser { get; set; }
         public Request? Request { get; set; }
         public RequestStatus? RequestStatus { get; set; }
     }

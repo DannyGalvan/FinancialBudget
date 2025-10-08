@@ -4,7 +4,7 @@
     /// Defines the <see cref="OrderAttribute" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public abstract class OrderAttribute(int priority) : Attribute
+    public class OrderAttribute(int priority) : Attribute
     {
         /// <summary>
         /// Gets the Priority

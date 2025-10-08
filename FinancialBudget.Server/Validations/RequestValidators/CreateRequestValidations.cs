@@ -35,8 +35,11 @@ namespace FinancialBudget.Server.Validations.RequestValidators
                 .NotNull().WithMessage("El correo electrónico no puede ser nulo")
                 .EmailAddress().WithMessage("El correo electrónico no es válido");
 
-            RuleFor(x => x.State)
+            RuleFor(x => x.RequestStatusId)
                 .Null().WithMessage("El Estado no debes mandarlo al crear una solicitud");
+
+            RuleFor(x => x.Comments)
+                .Null().WithMessage("Los comentarios no debes mandarlo al crear una solicitud");
 
             RuleFor(x => x.PriorityId)
                 .NotNull().WithMessage("El Id de la prioridad no puede ser nulo")

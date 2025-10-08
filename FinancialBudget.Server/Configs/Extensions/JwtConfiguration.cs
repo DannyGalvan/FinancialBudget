@@ -1,4 +1,7 @@
-﻿using FinancialBudget.Server.Entities.Response;
+﻿using System.Security.Claims;
+using FinancialBudget.Server.Context;
+using FinancialBudget.Server.Entities.Response;
+using FinancialBudget.Server.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FinancialBudget.Server.Configs.Extensions
@@ -21,7 +24,7 @@ namespace FinancialBudget.Server.Configs.Extensions
         /// <param name="appSettingsConfig">The appSettingsConfig<see cref="AppSettings"/></param>
         /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddJwtConfiguration(this IServiceCollection services,
-            AppSettings appSettingsConfig)
+            AppSettings appSettingsConfig, PolicySettings policySettings)
         {
             services.AddAuthentication(d =>
                 {
@@ -71,34 +74,34 @@ namespace FinancialBudget.Server.Configs.Extensions
                     };
                 });
 
-            //    services.AddAuthorization(options =>
-            //    {
-            //        // Get the service from ICrmContext through the ServiceProvider
-            //        using var scope = services.BuildServiceProvider().CreateScope();
+            services.AddAuthorization(options =>
+            {
+                // Get the service from ICrmContext through the ServiceProvider
+                using var scope = services.BuildServiceProvider().CreateScope();
 
-            //        var bd = scope.ServiceProvider.GetRequiredService<DataContext>();
+                var bd = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-            //        var operations = bd.Operations.ToList();
+                var operations = bd.Operations.ToList();
 
-            //        foreach (var operation in operations)
-            //        {
-            //            if (operation.Policy.Contains(policySettings.ContainsList) && operation.Policy != policySettings.NotEqualList)
-            //            {
-            //                // Add a custom policy that allows any of the claims.
-            //                options.AddPolicy(operation.Policy, policy =>
-            //                {
-            //                    policy.Requirements.Add(new MultipleClaimsRequirement([
-            //                        new KeyValuePair<string, string>(ClaimTypes.AuthorizationDecision, operation.Guid),
-            //                        new KeyValuePair<string, string>(ClaimTypes.AuthorizationDecision, policySettings.EqualValue)
-            //                    ]));
-            //                });
-            //            }
-            //            else
-            //            {
-            //                options.AddPolicy(operation.Policy, policy => policy.RequireClaim(claimType: ClaimTypes.AuthorizationDecision, operation.Guid));
-            //            }
-            //        }
-            //    });
+                foreach (var operation in operations)
+                {
+                    if (operation.Policy.Contains(policySettings.ContainsList) && operation.Policy != policySettings.NotEqualList)
+                    {
+                        // Add a custom policy that allows any of the claims.
+                        options.AddPolicy(operation.Policy, policy =>
+                        {
+                            policy.Requirements.Add(new MultipleClaimsRequirement([
+                                new KeyValuePair<string, string>(ClaimTypes.AuthorizationDecision, operation.Id.ToString()),
+                                    new KeyValuePair<string, string>(ClaimTypes.AuthorizationDecision, policySettings.EqualValue)
+                            ]));
+                        });
+                    }
+                    else
+                    {
+                        options.AddPolicy(operation.Policy, policy => policy.RequireClaim(claimType: ClaimTypes.AuthorizationDecision, operation.Id.ToString()));
+                    }
+                }
+            });
 
             return services;
         }

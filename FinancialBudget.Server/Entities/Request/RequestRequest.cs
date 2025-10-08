@@ -12,7 +12,8 @@ namespace FinancialBudget.Server.Entities.Request
         public string? RequestDate { get; set; }
         public string? Email { get; set; } 
         public long? PriorityId { get; set; }
-        public int? State { get; set; }
+        public int? RequestStatusId { get; set; }
+        public string? Comments { get; set; }
         public long? CreatedBy { get; set; }
         public long? UpdatedBy { get; set; }
     }

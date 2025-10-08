@@ -12,7 +12,6 @@
     /// <summary>
     /// Defines the <see cref="BudgetController" />
     /// </summary>
-    [Authorize]
     [Route("api/v1/[controller]")]
     public class BudgetController(IEntityService<Budget, BudgetRequest, long> service, IMapper mapper)
         : CrudController<Budget, BudgetRequest, BudgetResponse, long>(service, mapper)
@@ -23,6 +22,7 @@
         /// <param name="query">The query<see cref="QueryParamsRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet]
+        [Authorize(Policy = "Budget.List")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<List<BudgetResponse>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
         public override IActionResult GetAll([FromQuery] QueryParamsRequest query)
@@ -37,6 +37,7 @@
         /// <param name="include">The include<see cref="string?"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("{id:long}")]
+        [Authorize(Policy = "Budget.List")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<BudgetResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
         public override IActionResult Get(long id, [FromQuery] string? include = null)
@@ -50,6 +51,7 @@
         /// <param name="request">The request<see cref="BudgetRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpPost]
+        [Authorize(Policy = "Budget.Create")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<BudgetResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
         public override IActionResult Create([FromBody] BudgetRequest request)
@@ -63,6 +65,7 @@
         /// <param name="request">The request<see cref="BudgetRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpPut]
+        [Authorize(Policy = "Budget.Update")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<BudgetResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
         public override IActionResult Update([FromBody] BudgetRequest request)
@@ -76,6 +79,7 @@
         /// <param name="request">The request<see cref="BudgetRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpPatch]
+        [Authorize(Policy = "Budget.Update")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<BudgetResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
         public override IActionResult PartialUpdate([FromBody] BudgetRequest request)
@@ -89,6 +93,7 @@
         /// <param name="id">The id<see cref="long"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpDelete]
+        [Authorize(Policy = "Budget.Delete")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<BudgetResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
         public override IActionResult Delete([FromQuery] long id)

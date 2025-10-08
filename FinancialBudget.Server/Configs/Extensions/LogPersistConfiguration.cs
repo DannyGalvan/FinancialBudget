@@ -1,9 +1,10 @@
-﻿namespace FinancialBudget.Server.Configs.Extensions
+﻿using NpgsqlTypes;
+using Serilog.Sinks.PostgreSQL;
+
+namespace FinancialBudget.Server.Configs.Extensions
 {
     using Serilog;
     using Serilog.Extensions.Logging;
-    using Serilog.Sinks.MSSqlServer;
-    using System.Collections.ObjectModel;
 
     /// <summary>
     /// Defines the <see cref="LogPersistConfiguration" />
@@ -20,12 +21,16 @@
         {
             services.AddLogging(loggerBuilder =>
             {
-                var columnOptions = new ColumnOptions
+                IDictionary<string, ColumnWriterBase> columnWriters = new Dictionary<string, ColumnWriterBase>
                 {
-                    AdditionalColumns = new Collection<SqlColumn>
-                    {
-                        new() { ColumnName = "RequestId", DataType = System.Data.SqlDbType.NVarChar, DataLength = 50 }
-                    }
+                    { "message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
+                    { "message_template", new MessageTemplateColumnWriter(NpgsqlDbType.Text) },
+                    { "level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
+                    { "raise_date", new TimestampColumnWriter(NpgsqlDbType.TimestampTz) },
+                    { "exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
+                    { "properties", new LogEventSerializedColumnWriter(NpgsqlDbType.Jsonb) },
+                    { "props_test", new PropertiesColumnWriter(NpgsqlDbType.Jsonb) },
+                    { "machine_name", new SinglePropertyColumnWriter("MachineName", PropertyWriteMethod.ToString, NpgsqlDbType.Text, "l") }
                 };
 
                 loggerBuilder.AddConfiguration(configuration.GetSection("Serilog"));
@@ -34,11 +39,12 @@
                     .MinimumLevel.Information()
                     .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
                     .Enrich.FromLogContext()
-                    .WriteTo.MSSqlServer(
-                        connectionString: configuration.GetConnectionString("DeliveryApp"),
-                        sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true },
-                        columnOptions: columnOptions,
-                        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+                    .WriteTo.PostgreSQL(
+                        connectionString: configuration.GetConnectionString("Default"),
+                        tableName: "Logs",
+                        columnOptions: columnWriters,
+                        needAutoCreateTable: true,  
+                        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
                     .CreateLogger();
 
                 loggerBuilder.AddProvider(new SerilogLoggerProvider(log));

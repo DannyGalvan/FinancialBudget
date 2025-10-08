@@ -40,9 +40,13 @@ namespace FinancialBudget.Server.Validations.RequestValidators
                 .NotEmpty().WithMessage("El Id de la prioridad no puede ser vacio")
                 .GreaterThan(0).WithMessage("El Id de la prioridad debe ser mayor a 0");
 
-            RuleFor(x => x.State)
+            RuleFor(x => x.RequestStatusId)
                 .NotNull().WithMessage("El estado no puede ser nulo")
                 .NotEmpty().WithMessage("El estado es necesario");
+
+            RuleFor(x => x.Comments)
+                .NotNull().WithMessage("Los comentarios no pueden ser nulos")
+                .NotEmpty().WithMessage("Los comentarios son necesarios");
 
         }
     }
