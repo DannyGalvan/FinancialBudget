@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer>
       <strong className="text-sky-800">
-        <Link to={nameRoutes.root}>Copyright &copy; 2024 Vitali Alimentos</Link>{" "}
+        <Link to={nameRoutes.root}>Copyright &copy; 2024 Gestion de Finanzas</Link>{" "}
         .{" "}
       </strong>
       Todos los derechos reservados.

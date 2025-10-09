@@ -88,14 +88,13 @@ export function Component() {
               {success != null && <Response message={message} type={success} />}
               <div className="flex justify-center">
                 <Image
-                  isBlurred
-                  isZoomed
                   alt="Esi Logo"
                   className=""
                   src={Images.logo}
                   width={240}
                 />
               </div>
+              <div className="flex justify-center mt-4">Bienvenido</div>
               <Form validationErrors={errors} onSubmit={handleSubmit}>
                 <Input
                   isRequired

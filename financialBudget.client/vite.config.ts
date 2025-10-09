@@ -58,16 +58,17 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://localhost:7266/api",
+        target: "http://93.127.139.74:83",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
     },
     port: 60263,
-    https: {
-      key: readFileSync(keyFilePath),
-      cert: readFileSync(certFilePath),
-    },
+    // Commented out HTTPS for development - allows HTTP API calls
+    // https: {
+    //   key: readFileSync(keyFilePath),
+    //   cert: readFileSync(certFilePath),
+    // },
   },
 });

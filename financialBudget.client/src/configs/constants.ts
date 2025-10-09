@@ -1,5 +1,6 @@
 import type { InitialAuth } from "../types/InitialAuth";
 
+// Using Vite proxy - requests to /api will be proxied to http://93.127.139.74:83/api
 export const URL_BASE = "";
 export const API_URL = `${URL_BASE}/api/v1/`;
 

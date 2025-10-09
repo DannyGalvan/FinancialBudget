@@ -9,7 +9,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Project.Server.Controllers
+namespace FinancialBudget.Server.Controllers
 {
     /// <summary>
     /// Defines the <see cref="AuthController" />

@@ -13,7 +13,6 @@ import { Images } from "../../assets/images/images";
 import { nameRoutes } from "../../configs/constants";
 import { useAuth } from "../../hooks/useAuth";
 import { Icon } from "../icons/Icon";
-import { SubMenu } from "../links/SubMenu";
 
 const animationConfigPhone = {
   open: {
@@ -84,13 +83,8 @@ export function Sidebar() {
     navigate(nameRoutes.login);
   }, [logout, navigate]);
 
-  const toggleSidebar = useCallback(() => {
-    setOpen(!open);
-    localStorage.setItem("openSidebar", open ? "false" : "true");
-  }, [open]);
-
   return (
-    <div className="shadow-[13px_2px_22px_4px_#a0aec0]">
+    <div className="shadow-[13px_2px_22px_4px_rgba(25,123,189,0.3)]">
       <div
         className={`fixed inset-0 z-[47] max-h-screen md:hidden ${
           open ? "block" : "hidden"
@@ -100,95 +94,101 @@ export function Sidebar() {
       <motion.div
         ref={sidebarRef as RefObject<HTMLDivElement> | null}
         animate={open ? "open" : "closed"}
-        className="fixed z-[48] h-screen w-[16rem] max-w-[16rem] overflow-hidden bg-gradient-to-r from-cyan-600 via-cyan-500 to-cyan-300 text-white shadow-xl md:relative "
+        className="fixed z-[48] h-screen w-[16rem] max-w-[16rem] overflow-hidden bg-gradient-to-b from-[#0f4264] via-[#197BBD] to-[#1a7bb8] text-white shadow-2xl md:relative transition-all duration-300"
         initial={{ x: isTabletMid ? -250 : 0 }}
         variants={Nav_animation}
+        onMouseEnter={() => !isTabletMid && setOpen(true)}
+        onMouseLeave={() => !isTabletMid && localStorage.getItem("openSidebar") !== "true" && setOpen(false)}
       >
         <Link
           viewTransition
-          className="flex gap-2.5 justify-center items-center py-3 mx-3 font-medium border-b border-slate-300"
+          className="flex gap-2.5 justify-center items-center py-4 mx-3 font-medium border-b border-white/20 hover:border-white/40 transition-colors duration-300"
           to={nameRoutes.root}
         >
           <Image
             alt="Logo La Sante"
-            className="w-100 rounded-xl"
+            className="w-100 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-shadow duration-300"
             src={Images.logo}
           />
         </Link>
 
-        <div className="flex h-full flex-col">
-          <ul className="flex flex-col h-[50%] gap-1 overflow-x-hidden  px-2.5 py-5 text-[0.9rem] font-medium scrollbar-thin scrollbar-thumb-indigo-800 scrollbar-track-white md:h-48%]">
+        <div className="flex h-full flex-col pb-4">
+          <ul className="flex flex-col gap-2 overflow-x-hidden px-3 py-6 text-[0.9rem] font-medium scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
             <li>
               <Link
                 viewTransition
-                className={`link ${pathname === nameRoutes.root ? "active" : ""}`}
+                className={`link transition-all duration-300 ${
+                  pathname === nameRoutes.root
+                    ? "bg-[#f0f7ff] text-[#197BBD] shadow-lg"
+                    : "hover:bg-white/10 hover:text-white hover:shadow-md hover:scale-105"
+                }`}
                 to={nameRoutes.root}
               >
-                <Icon name="bi bi-house-door-fill" size={23} />
-                Home
+                <Icon name="bi bi-house-door-fill" size={23} color="#197BBD"/>
+                {(open || isTabletMid) && <span>Home</span>}
               </Link>
             </li>
             {open || isTabletMid ? (
-              <div className="border-y border-slate-300 py-3">
-                <small className="mb-2 inline-block pl-3 text-slate-500">
-                  Mantenimientos
+              <div className="border-y border-white/20 py-4 my-2">
+                <small className="mb-3 inline-block pl-3 text-white/70 font-semibold uppercase tracking-wider text-xs">
+                  Opciones
                 </small>
-                {operations?.map((menu) => (
-                  <div key={menu.module.path} className="flex flex-col gap-1">
-                    <SubMenu data={menu} />
-                  </div>
-                ))}
+                <div className="flex flex-col gap-1">
+                  {operations?.map((menu) => 
+                    menu.operations?.map((operation) => 
+                      operation.isVisible && (
+                        <Link
+                          key={operation.id}
+                          viewTransition
+                          className={`link transition-all duration-300 capitalize ${
+                            pathname.toLowerCase() === operation.path.toLowerCase()
+                              ? "bg-[#f0f7ff] text-[#197BBD] shadow-lg"
+                              : "hover:bg-white/10 hover:text-white hover:shadow-md hover:scale-105"
+                          }`}
+                          to={operation.path}
+                        >
+                          <Icon name={operation.icon} size={20} color={pathname.toLowerCase() === operation.path.toLowerCase() ? "#197BBD" : "currentColor"} />
+                          <span>{operation.name}</span>
+                        </Link>
+                      )
+                    )
+                  )}
+                </div>
               </div>
             ) : null}
           </ul>
-          <ul className="flex flex-col gap-1 px-2.5 py-5 text-[0.9rem] font-medium">
-            <li>
-              <a className="font-bold text-red-600 link" onClick={closeSesion}>
-                <Icon color="red" name="bi bi-box-arrow-left" size={23} />
-                Salir
-              </a>
-            </li>
-          </ul>
+          
+          {/* Logout Button */}
+          <div className="px-3 pb-3 mt-auto pt-5">
+            <a 
+              className="link font-bold text-red-400 hover:text-red-300 hover:bg-red-500/20 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-3" 
+              onClick={closeSesion}
+            >
+              <Icon color="currentColor" name="bi bi-box-arrow-left" size={23} />
+              {(open || isTabletMid) && <span>Salir</span>}
+            </a>
+          </div>
+
+          {/* User Info Section */}
           {open ? (
-            <div className="z-50 my-auto max-h-48 w-full flex-1 whitespace-pre text-sm font-medium">
-              <div className="flex flex-col items-center justify-between gap-2 border-y border-slate-300 p-2">
-                <p className="rounded-xl bg-teal-50 px-3 py-1.5 text-xs font-bold text-black">
-                  {name}
-                </p>
-                <p className="rounded-xl bg-teal-50 px-2 py-1.5 text-xs font-bold text-black">
-                  {email}
-                </p>
+            <div className="px-3 pb-12">
+              <div className="flex items-center gap-3 p-3">
+                <div className="flex-shrink-0">
+                  <Icon name="bi bi-person-circle" size={40} color="197BBD" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-white truncate">
+                    {name}
+                  </p>
+                  <p className="text-xs text-white/80 truncate">
+                    {email}
+                  </p>
+                </div>
               </div>
             </div>
           ) : null}
         </div>
-        <motion.div
-          animate={
-            open
-              ? {
-                  x: 0,
-                  y: 0,
-                  rotate: 0,
-                }
-              : {
-                  x: -10,
-                  y: -200,
-                  rotate: 180,
-                }
-          }
-          className={`hidden md:block absolute right-2  z-50 cursor-pointer h-fit w-fit ${open ? "bottom-16" : "bottom-0"}`}
-          transition={{ duration: 0.3 }}
-          onClick={toggleSidebar}
-        >
-          <Icon name="bi bi-caret-left-fill" size={25} />
-        </motion.div>
       </motion.div>
-      <div
-        className="absolute z-[46] w-full bg-white p-3 md:hidden"
-        onClick={toggleSidebar}
-      >
-        <Icon color="black" name="bi bi-list" size={25} />
-      </div>
     </div>
   );
 }
