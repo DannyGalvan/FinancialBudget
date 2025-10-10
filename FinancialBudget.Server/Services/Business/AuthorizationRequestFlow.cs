@@ -24,7 +24,7 @@ namespace FinancialBudget.Server.Services.Business
 
             if (current == null) return response;
 
-            var hasDisponibility = _db.Budgets.FirstOrDefault(x => x.Period == DateTime.Now.Year && x.AvailableAmount >= request.RequestAmount);
+            var hasDisponibility = _db.Budgets.FirstOrDefault(x => x.Period == DateTimeOffset.UtcNow.Year && x.AvailableAmount >= request.RequestAmount);
 
             if (state == 2 && hasDisponibility == null)
             {
@@ -53,6 +53,13 @@ namespace FinancialBudget.Server.Services.Business
                     newTrace.RequestStatusId = 3;
                     newTrace.AuthorizeUserId = current.AuthorizeUserId;
                     newTrace.State = 0; // Ya no será trazable
+
+                    request.RejectionReason = comment;
+                    request.UpdatedAt = DateTimeOffset.UtcNow;
+                    _db.Entry(request).State = EntityState.Modified;
+
+                    _db.SaveChanges();
+
                     break;
                 case 2:
                     newTrace.RequestStatusId = 2; // Aprobada
@@ -64,7 +71,7 @@ namespace FinancialBudget.Server.Services.Business
                         RequestId = request.Id,
                         Amount = request.RequestAmount,
                         CreatedAt = DateTimeOffset.UtcNow,
-                        BudgetId = _db.Budgets.FirstOrDefault(x => x.Period == DateTime.Now.Year)?.Id ?? 0,
+                        BudgetId = _db.Budgets.FirstOrDefault(x => x.Period == DateTimeOffset.UtcNow.Year)?.Id ?? 0,
                         OriginId = request.OriginId,
                         SplitTypeId = 1,
                         State = 1,
@@ -75,6 +82,11 @@ namespace FinancialBudget.Server.Services.Business
 
                     _db.Entry(newBudgetItem).State = EntityState.Added;
                     _db.BudgetItems.Add(newBudgetItem);
+
+                    request.AuthorizedReason = comment;
+                    request.ApprovedDate = DateTimeOffset.UtcNow;
+                    request.UpdatedAt = DateTimeOffset.UtcNow;
+                    _db.Entry(request).State = EntityState.Modified;
 
                     // Actualizar la disponibilidad del presupuesto
                     if (hasDisponibility != null)

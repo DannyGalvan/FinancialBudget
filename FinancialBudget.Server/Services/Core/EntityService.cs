@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using FinancialBudget.Server.Context;
+﻿using FinancialBudget.Server.Context;
 using FinancialBudget.Server.Entities.Interfaces;
 using FinancialBudget.Server.Entities.Response;
 using FinancialBudget.Server.Services.Interfaces;
@@ -8,6 +7,8 @@ using FluentValidation.Results;
 using Lombok.NET;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 
 namespace FinancialBudget.Server.Services.Core
 {
@@ -292,7 +293,12 @@ namespace FinancialBudget.Server.Services.Core
 
                 var entity = _mapper.Map<TEntity>(model!);
                 var database = _db.Set<TEntity>();
-                using var transaction = _db.Database.BeginTransaction();
+                // Solo usar transacción si la base no es InMemory
+                IDbContextTransaction? transaction = null;
+                if (!IsInMemoryDatabase())
+                {
+                    transaction = _db.Database.BeginTransaction();
+                }
 
                 foreach (var interceptor in _entitySupportService.GetBeforeCreateInterceptors<TEntity, TRequest>())
                 {
@@ -311,7 +317,7 @@ namespace FinancialBudget.Server.Services.Core
                 {
                     userId = entity.CreatedBy.ToString();
 
-                    entity.CreatedAt = DateTime.UtcNow;
+                    entity.CreatedAt = DateTimeOffset.UtcNow;
                     entity.UpdatedAt = null;
                     entity.UpdatedBy = null;
 
@@ -336,7 +342,9 @@ namespace FinancialBudget.Server.Services.Core
                     response = interceptor.Execute(response, model);
                 }
 
-                transaction.Commit();
+                // Commit solo si hay transacción
+                transaction?.Commit();
+                transaction?.Dispose();
 
                 return response;
             }
@@ -381,7 +389,11 @@ namespace FinancialBudget.Server.Services.Core
                 TEntity entity = _mapper.Map<TEntity>(model!);
                 var database = _db.Set<TEntity>();
 
-                using var transaction = _db.Database.BeginTransaction();
+                IDbContextTransaction? transaction = null;
+                if (!IsInMemoryDatabase())
+                {
+                    transaction = _db.Database.BeginTransaction();
+                }
 
                 var parameter = Expression.Parameter(typeof(TEntity), "x");
                 var member = Expression.PropertyOrField(parameter, "Id");
@@ -389,6 +401,7 @@ namespace FinancialBudget.Server.Services.Core
                 var condition = Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(member, constant), parameter);
 
                 TEntity? prevState = database.AsNoTracking().FirstOrDefault(condition);
+               
 
                 if (prevState == null)
                 {
@@ -421,11 +434,10 @@ namespace FinancialBudget.Server.Services.Core
 
                 Util.UpdateProperties(entityToUpdate, entity);
 
-                entityToUpdate.UpdatedAt = DateTime.UtcNow;
+                entityToUpdate.UpdatedAt = DateTimeOffset.UtcNow;
                 entityToUpdate.CreatedAt = createdAt;
 
-                database.Entry(entityToUpdate).State = EntityState.Detached;
-
+                DetachLocalIfTracked(database, entityToUpdate.Id);
                 database.Update(entityToUpdate);
                 _db.SaveChanges();
 
@@ -446,7 +458,8 @@ namespace FinancialBudget.Server.Services.Core
                     response = interceptor.Execute(response, model, prevState);
                 }
 
-                transaction.Commit();
+                transaction?.Commit();
+                transaction?.Dispose();
 
                 return response;
             }
@@ -492,7 +505,11 @@ namespace FinancialBudget.Server.Services.Core
 
                 var database = _db.Set<TEntity>();
 
-                using var transaction = _db.Database.BeginTransaction();
+                IDbContextTransaction? transaction = null;
+                if (!IsInMemoryDatabase())
+                {
+                    transaction = _db.Database.BeginTransaction();
+                }
 
                 var parameter = Expression.Parameter(typeof(TEntity), "x");
                 var member = Expression.PropertyOrField(parameter, "Id");
@@ -517,9 +534,10 @@ namespace FinancialBudget.Server.Services.Core
 
                 DateTimeOffset createdAt = entityToUpdate.CreatedAt;
                 Util.UpdateProperties(entityToUpdate, entity);
-                entityToUpdate.UpdatedAt = DateTime.UtcNow;
+                entityToUpdate.UpdatedAt = DateTimeOffset.UtcNow;
                 entityToUpdate.CreatedAt = createdAt;
 
+                DetachLocalIfTracked(database, entityToUpdate.Id);
                 database.Update(entityToUpdate);
                 _db.SaveChanges();
 
@@ -541,7 +559,10 @@ namespace FinancialBudget.Server.Services.Core
                     response = interceptor.Execute(response, model, prevState);
                 }
 
-                transaction.Commit();
+               
+
+                transaction?.Commit();
+                transaction?.Dispose();
 
                 return response;
             }
@@ -584,9 +605,15 @@ namespace FinancialBudget.Server.Services.Core
                 var constant = Expression.Constant(id);
                 var condition = Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(member, constant), parameter);
 
-                TEntity? entity = _db.Set<TEntity>().AsNoTracking().FirstOrDefault(condition);
+                var database = _db.Set<TEntity>();
 
-                using var transaction = _db.Database.BeginTransaction();
+                TEntity? entity = database.AsNoTracking().FirstOrDefault(condition);
+
+                IDbContextTransaction? transaction = null;
+                if (!IsInMemoryDatabase())
+                {
+                    transaction = _db.Database.BeginTransaction();
+                }
 
                 if (entity == null)
                 {
@@ -600,11 +627,12 @@ namespace FinancialBudget.Server.Services.Core
 
                 userId = entity.CreatedBy.ToString();
 
-                entity.UpdatedAt = DateTime.UtcNow;
+                entity.UpdatedAt = DateTimeOffset.UtcNow;
                 entity.State = 0;
                 entity.UpdatedBy = deletedBy;
 
-                _db.Set<TEntity>().Update(entity);
+                DetachLocalIfTracked(database, entity.Id);
+                database.Update(entity);
                 _db.SaveChanges();
 
                 response.Errors = null;
@@ -612,7 +640,8 @@ namespace FinancialBudget.Server.Services.Core
                 response.Success = true;
                 response.Message = $"Entity {typeof(TEntity).Name} deleted successfully";
 
-                transaction.Commit();
+                transaction?.Commit();
+                transaction?.Dispose();
 
                 return response;
             }
@@ -626,6 +655,20 @@ namespace FinancialBudget.Server.Services.Core
                 _logger.LogError(ex, "Error al eliminar {entity} : usuario {user} : {message}", typeof(TEntity).Name, userId, ex.Message);
 
                 return response;
+            }
+        }
+
+        private bool IsInMemoryDatabase()
+        {
+            return _db.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
+        }
+
+        private void DetachLocalIfTracked<T>(DbSet<T> dbSet, TId id) where T : class, IEntity<TId>
+        {
+            var local = dbSet.Local.FirstOrDefault(e => e.Id!.Equals(id));
+            if (local != null)
+            {
+                _db.Entry(local).State = EntityState.Detached;
             }
         }
     }

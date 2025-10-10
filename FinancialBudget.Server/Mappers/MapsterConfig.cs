@@ -1,4 +1,5 @@
-﻿using FinancialBudget.Server.Entities.Models;
+﻿using System.Globalization;
+using FinancialBudget.Server.Entities.Models;
 using FinancialBudget.Server.Entities.Request;
 using FinancialBudget.Server.Entities.Response;
 using Mapster;
@@ -62,7 +63,15 @@ namespace FinancialBudget.Server.Mappers
                 .Map(dest => dest.RequestAmount, src => src.RequestAmount)
                 .Map(dest => dest.RequestStatusId, src => src.RequestStatusId ?? 1)
                 .Map(dest => dest.PriorityId, src => src.PriorityId)
-                .Map(dest => dest.RequestDate, src => string.IsNullOrEmpty(src.RequestDate) ? DateTime.Now : DateTime.ParseExact(src.RequestDate, "yyyy-MM-dd", null))
+                .Map(dest => dest.RequestDate, src =>
+                    string.IsNullOrWhiteSpace(src.RequestDate)
+                        ? DateTimeOffset.UtcNow
+                        : DateTimeOffset.ParseExact(
+                            src.RequestDate,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal
+                        ))
                 .Map(dest => dest.Email, src => src.Email)
                 .Map(dest => dest.State, src => 1)
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
