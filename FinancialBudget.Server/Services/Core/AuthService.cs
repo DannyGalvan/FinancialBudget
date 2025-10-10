@@ -188,7 +188,7 @@ namespace FinancialBudget.Server.Services.Core
 
                 if (user.Rol!.RolOperations.Count != 0)
                 {
-                    claims.AddRange(user.Rol!.RolOperations.Select(item => new Claim(ClaimTypes.Role, item.OperationId.ToString())));
+                    claims.AddRange(user.Rol!.RolOperations.Select(item => new Claim(ClaimTypes.AuthorizationDecision, item.OperationId.ToString())));
                 }
 
                 var tokenDescriptor = new SecurityTokenDescriptor

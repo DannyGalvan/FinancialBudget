@@ -22,23 +22,26 @@ namespace FinancialBudget.Server
 
             //Add the configuration to the builder
             IConfigurationSection appSettingsSection = configuration.GetSection("AppSettings");
+            IConfigurationSection policySettingsSection = configuration.GetSection("PolicySettings");
 
             AppSettings appSettingsConfig = appSettingsSection.Get<AppSettings>()!;
+            PolicySettings policySettingsConfig = policySettingsSection.Get<PolicySettings>()!;
 
             builder.Services.Configure<AppSettings>(appSettingsSection);
+            builder.Services.Configure<PolicySettings>(policySettingsSection);
 
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddMapsterSettings();
-            builder.Services.AddJwtConfiguration(appSettingsConfig);
+            builder.Services.AddJwtConfiguration(appSettingsConfig, policySettingsConfig);
             builder.Services.AddSwaggerConfiguration();
             builder.Services.AddContextGroup(configuration);
             builder.Services.AddValidationsGroup();
             builder.Services.AddServiceGroup();
             builder.Services.AddControllersConfiguration();
-            //builder.Services.AddLoggerConfiguration(configuration);
+            builder.Services.AddLoggerConfiguration(configuration);
 
             var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace FinancialBudget.Server.Utils
 {
@@ -23,7 +25,7 @@ namespace FinancialBudget.Server.Utils
 
                 switch (property.Name)
                 {
-                    case "CreatedAt" or "OrderDate" or "DeliveryDate":
+                    case "CreatedAt" or "RequestDate":
                         continue;
                     case "Id":
                         continue;
@@ -71,33 +73,40 @@ namespace FinancialBudget.Server.Utils
         /// The SetPropertyValue
         /// </summary>
         /// <param name="objType">The objType<see cref="Type"/></param>
-        /// <param name="propertyName">The propertyName<see cref="string"/></param>
+        /// <param name="propertyPath">The propertyName<see cref="string"/></param>
         /// <param name="valueToConvert">The valueToConvert<see cref="string"/></param>
-        /// <returns>The <see cref="dynamic?"/></returns>
-        public static dynamic? SetPropertyValue(Type objType, string propertyName, string valueToConvert)
+        /// <returns>The <see>
+        ///         <cref>dynamic?</cref>
+        ///     </see>
+        /// </returns>
+        public static dynamic? SetPropertyValue(Type objType, string propertyPath, string valueToConvert)
         {
-            // Obtener la propiedad a través de reflexión
-            PropertyInfo? property = objType.GetProperty(propertyName);
-            if (property == null)
+            // Navegar por la ruta anidada (ej: "Empleado.Nombre")
+            string[] parts = propertyPath.Split('.');
+            Type? currentType = objType;
+            PropertyInfo? property = null;
+
+            foreach (var part in parts)
             {
-                Console.WriteLine($"La propiedad {propertyName} no se encontró en el tipo {objType.Name}");
-                return null;
+                property = currentType?.GetProperty(part);
+                if (property == null)
+                {
+                    Console.WriteLine($"La propiedad '{part}' no se encontró en el tipo '{currentType?.Name}'");
+                    return null;
+                }
+                currentType = property.PropertyType;
             }
 
-            // Obtener el tipo de la propiedad
-            Type propertyType = property.PropertyType;
+            if (property == null) return null;
 
-            // Convertir el valor de string al tipo de la propiedad
-            object? parsedValue = ConvertToType(valueToConvert, propertyType);
+            // Obtener el tipo final
+            Type targetType = property.PropertyType;
 
-            // Asignar el valor convertido a la propiedad
-            if (parsedValue != null)
-            {
-                return parsedValue;
-            }
-
-            return null;
+            // Convertir el valor
+            object? parsedValue = ConvertToType(valueToConvert, targetType);
+            return parsedValue;
         }
+
 
         /// <summary>
         /// The ConvertToType
@@ -131,6 +140,21 @@ namespace FinancialBudget.Server.Utils
                     return Enum.Parse(underlyingType, value);
                 }
 
+                // Para DateTime con un formato específico
+                if (underlyingType == typeof(DateTimeOffset))
+                {
+                    string[] formatos = { "yyyy-MM-ddTHH", "yyyy-MM-ddTHH:mm", "yyyy-MM-ddTHH:mm:ss", "yyyy-MM-ddTHH:mm:ss.fff", "yyyy-MM-dd" };
+                    if (DateTimeOffset.TryParseExact(value, formatos, null, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out DateTimeOffset fecha))
+                    {
+                        return fecha;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error al convertir el valor '{value}' a {targetType.Name}: Formato de fecha no válido.");
+                        return null;
+                    }
+                }
+
                 // Convertir el valor utilizando Convert.ChangeType
                 return Convert.ChangeType(value, underlyingType);
             }
@@ -139,6 +163,54 @@ namespace FinancialBudget.Server.Utils
                 Console.WriteLine($"Error al convertir el valor '{value}' a {targetType.Name}: {ex.Message}");
                 return null;
             }
+        }
+
+        public static bool IsCuiValid(string? cui)
+        {
+            if (string.IsNullOrWhiteSpace(cui))
+                return false;
+
+            // Remover espacios
+            cui = cui.Replace(" ", "");
+
+            // Validar formato general
+            if (!Regex.IsMatch(cui, @"^\d{13}$"))
+                return false;
+
+            // Extraer partes
+            var numero = cui.Substring(0, 8);
+            if (!int.TryParse(cui.Substring(8, 1), out int verificador))
+                return false;
+
+            if (!int.TryParse(cui.Substring(9, 2), out int depto) ||
+                !int.TryParse(cui.Substring(11, 2), out int muni))
+                return false;
+
+            // Validar código de municipio y departamento
+            int[] munisPorDepto = {
+                17,  8, 16, 16, 13, 14, 19,  8, 24, 21,  9,
+                30, 32, 21,  8, 17, 14,  5, 11, 11,  7, 17
+            };
+
+            if (depto == 0 || muni == 0)
+                return false;
+
+            if (depto > munisPorDepto.Length)
+                return false;
+
+            if (muni > munisPorDepto[depto - 1])
+                return false;
+
+            // Validar dígito verificador (módulo 11)
+            int total = 0;
+            for (int i = 0; i < numero.Length; i++)
+            {
+                int digit = int.Parse(numero[i].ToString());
+                total += digit * (i + 2);
+            }
+
+            int modulo = total % 11;
+            return modulo == verificador;
         }
     }
 }

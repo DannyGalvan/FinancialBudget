@@ -8,7 +8,6 @@ namespace FinancialBudget.Server.Entities.Request
         public decimal? AuthorizedAmount { get; set; } 
         public decimal? AvailableAmount { get; set; } 
         public int? Period { get; set; }
-        public int? State { get; set; }
         public long? CreatedBy { get; set; }
         public long? UpdatedBy { get; set; }
     }

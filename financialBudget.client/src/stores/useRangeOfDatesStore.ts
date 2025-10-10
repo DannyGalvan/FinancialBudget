@@ -2,7 +2,7 @@ import type { DateValue, RangeValue } from "@heroui/calendar";
 import { parseDate } from "@internationalized/date";
 import { create } from "zustand";
 
-import type { DateFilters } from "../types/DateFilters.ts";
+import type { DateFilters } from "../types/DateFilters";
 import { minDateMaxDate } from "../utils/converted";
 
 interface RangeOfDateState {

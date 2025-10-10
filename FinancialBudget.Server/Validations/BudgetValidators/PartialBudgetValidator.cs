@@ -28,11 +28,6 @@ namespace FinancialBudget.Server.Validations.BudgetValidators
                 RuleFor(x => x.Period)
                     .GreaterThan(0).WithMessage("El Periodo debe ser mayor a 0");
             });
-            When(x => x.State.HasValue, () =>
-            {
-                RuleFor(x => x.State)
-                    .InclusiveBetween(0, 1).WithMessage("El Estado debe ser 0 (Inactivo) o 1 (Activo)");
-            });
         }
     }
 }

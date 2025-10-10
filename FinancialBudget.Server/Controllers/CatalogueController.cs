@@ -164,7 +164,7 @@
         /// <param name="catalogue">The catalogue<see cref="string"/></param>
         /// <param name="request">The request<see cref="CatalogueRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
-        [Authorize]
+        [Authorize(policy: "Catalogue.Create")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<CatalogueResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
@@ -214,7 +214,7 @@
         /// <param name="catalogue">The catalogue<see cref="string"/></param>
         /// <param name="request">The request<see cref="CatalogueRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
-        [Authorize]
+        [Authorize(Policy = "Catalogue.Update")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<CatalogueResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
@@ -229,7 +229,7 @@
         /// <param name="catalogue">The catalogue<see cref="string"/></param>
         /// <param name="request">The request<see cref="CatalogueRequest"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
-        [Authorize]
+        [Authorize(Policy = "Catalogue.Update")]
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<CatalogueResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]
@@ -244,7 +244,7 @@
         /// <param name="catalogue">The catalogue<see cref="string"/></param>
         /// <param name="id">The id<see cref="long"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
-        [Authorize]
+        [Authorize(Policy = "Catalogue.Delete")]
         [HttpDelete("{id:long}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<CatalogueResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response<List<ValidationFailure>>))]

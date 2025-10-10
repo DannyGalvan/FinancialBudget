@@ -26,9 +26,14 @@ namespace FinancialBudget.Server.Context.Config
                 .HasForeignKey(x => x.RequestStatusId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.User)
-                .WithMany(x => x.Traceabilities)
-                .HasForeignKey(x => x.UserId)
+            builder.HasOne(x => x.CreateUser)
+                .WithMany(x => x.CreateTraceabilities)
+                .HasForeignKey(x => x.CreateUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.AuthorizeUser)
+                .WithMany(x => x.AuthorizeTraceabilities)
+                .HasForeignKey(x => x.AuthorizeUserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
