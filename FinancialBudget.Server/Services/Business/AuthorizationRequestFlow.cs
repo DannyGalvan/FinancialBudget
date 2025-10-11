@@ -92,6 +92,7 @@ namespace FinancialBudget.Server.Services.Business
                     if (hasDisponibility != null)
                     {
                         hasDisponibility.AvailableAmount -= request.RequestAmount;
+                        hasDisponibility.CommittedAmount += request.RequestAmount;
                         _db.Entry(hasDisponibility).State = EntityState.Modified;
                         _db.Budgets.Update(hasDisponibility);
                     }
