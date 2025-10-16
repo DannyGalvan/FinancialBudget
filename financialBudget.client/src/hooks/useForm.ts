@@ -103,7 +103,7 @@ export const useForm = <T, U>(
           const errObj = error as ApiError;
           handleApiResponse({
             success: false,
-            data: null,
+            data: [],
             message: `${errObj.name ?? "Unknown error"} ${errObj.stack ?? ""}`,
             totalResults: 0,
           });
@@ -112,7 +112,7 @@ export const useForm = <T, U>(
     } else {
       handleApiResponse({
         success: false,
-        data: null,
+        data: [],
         message: "Error en la validación del formulario",
         totalResults: 0,
       });

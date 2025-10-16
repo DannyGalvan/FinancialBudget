@@ -26,14 +26,20 @@ export const useResponse = <T>() => {
     setFieldErrors(errors);
   };
 
-  const handleApiResponse = ({ data, success, message }: ApiResponse<T>) => {
+  const handleApiResponse = ({
+    data,
+    success,
+    message,
+    totalResults = 0,
+  }: ApiResponse<T>) => {
     if (success) {
       setDataResult(data);
     } else {
-      mapValidationFailuresToFieldErrors(data ?? []);
+      mapValidationFailuresToFieldErrors(data);
     }
     setSuccess(success);
     setApiMessage(message!);
+    console.log("Total Results:", totalResults);
   };
 
   return {

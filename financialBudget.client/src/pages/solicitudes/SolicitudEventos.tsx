@@ -1,14 +1,24 @@
-import { Card, CardBody } from "@heroui/card";
 import { Button } from "@heroui/button";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
+import { Card, CardBody } from "@heroui/card";
 import { Textarea } from "@heroui/input";
-import { useEffect, useState } from "react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/modal";
+import { useCallback, useEffect, useState } from "react";
 import { Icon } from "../../components/icons/Icon";
-import { getSolicitudesFiltered, rechazarSolicitud, aprobarSolicitud } from "../../services/solicitudService";
-import type { Solicitud } from "../../types/Solicitud";
-import { LoadingComponent } from "../../components/spinner/LoadingComponent";
 import { Response } from "../../components/messages/Response";
+import { LoadingComponent } from "../../components/spinner/LoadingComponent";
 import { useResponse } from "../../hooks/useResponse";
+import {
+  aprobarSolicitud,
+  getSolicitudesFiltered,
+  rechazarSolicitud,
+} from "../../services/solicitudService";
+import type { Solicitud } from "../../types/Solicitud";
 
 const getEstadoColor = (estado: string) => {
   switch (estado) {
@@ -28,55 +38,53 @@ const getEstadoColor = (estado: string) => {
 // Función para convertir fecha de DD/MM/YYYY a Date
 const parseDate = (dateStr: string): Date | null => {
   if (!dateStr) return null;
-  
+
   // Si ya es formato ISO (YYYY-MM-DD), usar directamente
-  if (dateStr.includes('-') && dateStr.indexOf('-') === 4) {
+  if (dateStr.includes("-") && dateStr.indexOf("-") === 4) {
     return new Date(dateStr);
   }
-  
+
   // Si es formato DD/MM/YYYY, convertir
-  if (dateStr.includes('/')) {
-    const [day, month, year] = dateStr.split('/');
+  if (dateStr.includes("/")) {
+    const [day, month, year] = dateStr.split("/");
     return new Date(`${year}-${month}-${day}`);
   }
-  
+
   return null;
 };
 
 const formatDate = (dateStr: string): string => {
   const date = parseDate(dateStr);
-  return date ? date.toLocaleDateString('es-ES') : 'N/A';
+  return date ? date.toLocaleDateString("es-ES") : "N/A";
 };
 
 export function Component() {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSolicitud, setSelectedSolicitud] = useState<Solicitud | null>(null);
+  const [selectedSolicitud, setSelectedSolicitud] = useState<Solicitud | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [razonRechazo, setRazonRechazo] = useState("");
   const { success, apiMessage, handleApiResponse } = useResponse<Solicitud[]>();
 
-  useEffect(() => {
-    loadSolicitudes();
-  }, []);
-
-  const loadSolicitudes = async () => {
+  const loadSolicitudes = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       // Filtrar por: OriginId = 2 (Eventos) Y RequestStatusId = 1 (Pendiente)
       const response = await getSolicitudesFiltered(
-        { 
-          tipo: "2",    // 2 = Eventos
-          estado: "1"   // 1 = Pendiente
+        {
+          tipo: "2", // 2 = Eventos
+          estado: "1", // 1 = Pendiente
         },
         1,
-        100
+        100,
       );
-      
+
       handleApiResponse(response);
-      
+
       if (response.success && response.data) {
         setSolicitudes(response.data);
       }
@@ -85,21 +93,24 @@ export function Component() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [handleApiResponse]);
+
+  useEffect(() => {
+    loadSolicitudes();
+  }, []);
 
   const handleRechazar = async () => {
     if (!selectedSolicitud || !razonRechazo.trim()) return;
 
     try {
       setLoading(true);
-      const email = selectedSolicitud.email || selectedSolicitud.contactEmail || '';
-      
+
       const response = await rechazarSolicitud(
         selectedSolicitud.id,
         razonRechazo,
-        email
       );
 
+      // Normalize response for the generic handler — cast to any to satisfy ApiResponse<Solicitud[]>
       handleApiResponse(response as any);
 
       if (response.success) {
@@ -120,7 +131,7 @@ export function Component() {
 
     try {
       setLoading(true);
-      
+
       const response = await aprobarSolicitud(selectedSolicitud.id);
       handleApiResponse(response as any);
 
@@ -165,10 +176,10 @@ export function Component() {
               <h2 className="text-xl font-semibold text-gray-700">
                 Solicitudes de Eventos
               </h2>
-              <Button 
-                color="primary" 
-                variant="shadow" 
+              <Button
+                color="primary"
                 size="md"
+                variant="shadow"
                 onPress={loadSolicitudes}
               >
                 <Icon name="bi bi-arrow-clockwise" size={16} />
@@ -178,8 +189,10 @@ export function Component() {
 
             {solicitudes.length === 0 ? (
               <div className="text-center py-12">
-                <Icon name="bi bi-inbox" size={48} color="text-gray-400" />
-                <p className="text-gray-500 mt-4">No hay solicitudes de eventos disponibles</p>
+                <Icon color="text-gray-400" name="bi bi-inbox" size={48} />
+                <p className="text-gray-500 mt-4">
+                  No hay solicitudes de eventos disponibles
+                </p>
               </div>
             ) : (
               <>
@@ -208,34 +221,34 @@ export function Component() {
                       <div className="flex items-center gap-3">
                         <div className="w-15 h-15 bg-gray-100  flex items-center justify-center">
                           <Icon
+                            color="text-gray-400"
                             name="bi bi-calendar-event"
                             size={18}
-                            color="text-gray-400"
                           />
                         </div>
                         <span className="text-sm text-gray-700">
-                          {solicitud.name || 'Sin descripción'}
+                          {solicitud.name || "Sin descripción"}
                         </span>
                       </div>
                       <div className="text-sm text-gray-600">
-                        {solicitud.reason || 'N/A'}
+                        {solicitud.reason || "N/A"}
                       </div>
                       <div className="text-sm text-gray-400">
                         {solicitud.requestNumber || solicitud.id}
                       </div>
                       <div className="text-sm text-gray-400">
-                        {formatDate(solicitud.requestDate || '')}
+                        {formatDate(solicitud.requestDate || "")}
                       </div>
                       <div className="text-sm text-gray-600 font-medium">
-                        {solicitud.priority?.name || 'N/A'}
+                        {solicitud.priority?.name || "N/A"}
                       </div>
                       <div className="text-sm font-semibold text-gray-700">
-                        Q{solicitud.requestAmount?.toLocaleString() || '0.00'}
+                        Q{solicitud.requestAmount?.toLocaleString() || "0.00"}
                       </div>
                       <div
-                        className={`text-sm font-bold text-right ${getEstadoColor(solicitud.requestStatus?.name || 'Pendiente')}`}
+                        className={`text-sm font-bold text-right ${getEstadoColor(solicitud.requestStatus?.name || "Pendiente")}`}
                       >
-                        {solicitud.requestStatus?.name || 'Pendiente'}
+                        {solicitud.requestStatus?.name || "Pendiente"}
                       </div>
                     </div>
                   ))}
@@ -247,11 +260,11 @@ export function Component() {
       </div>
 
       {/* Modal de Detalle */}
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)}
-        size="2xl"
+      <Modal
+        isOpen={isModalOpen}
         scrollBehavior="inside"
+        size="2xl"
+        onClose={() => setIsModalOpen(false)}
       >
         <ModalContent>
           {(onClose) => (
@@ -259,62 +272,90 @@ export function Component() {
               <ModalHeader className="flex flex-col gap-1 border-b">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <Icon name="bi bi-calendar-event" size={24} color="text-purple-600" />
+                    <Icon
+                      color="text-purple-600"
+                      name="bi bi-calendar-event"
+                      size={24}
+                    />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-800">
                       Detalle de Solicitud de Evento
                     </h3>
                     <p className="text-sm text-gray-500">
-                      #{selectedSolicitud?.requestNumber || selectedSolicitud?.id}
+                      #
+                      {selectedSolicitud?.requestNumber ||
+                        selectedSolicitud?.id}
                     </p>
                   </div>
                 </div>
               </ModalHeader>
               <ModalBody className="py-6">
-                {selectedSolicitud && (
+                {selectedSolicitud ? (
                   <div className="space-y-6">
                     {/* Información Principal */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-semibold text-gray-600">Descripción del Evento</label>
-                        <p className="text-gray-800 mt-1">{selectedSolicitud.name || 'N/A'}</p>
+                        <label className="text-sm font-semibold text-gray-600">
+                          Descripción del Evento
+                        </label>
+                        <p className="text-gray-800 mt-1">
+                          {selectedSolicitud.name || "N/A"}
+                        </p>
                       </div>
                       <div>
-                        <label className="text-sm font-semibold text-gray-600">Estado</label>
-                        <p className={`mt-1 font-bold ${getEstadoColor(selectedSolicitud.requestStatus?.name || 'Pendiente')}`}>
-                          {selectedSolicitud.requestStatus?.name || 'Pendiente'}
+                        <label className="text-sm font-semibold text-gray-600">
+                          Estado
+                        </label>
+                        <p
+                          className={`mt-1 font-bold ${getEstadoColor(selectedSolicitud.requestStatus?.name || "Pendiente")}`}
+                        >
+                          {selectedSolicitud.requestStatus?.name || "Pendiente"}
                         </p>
                       </div>
                     </div>
 
                     {/* Razón */}
                     <div>
-                      <label className="text-sm font-semibold text-gray-600">Razón / Motivo</label>
-                      <p className="text-gray-800 mt-1">{selectedSolicitud.reason || 'N/A'}</p>
+                      <label className="text-sm font-semibold text-gray-600">
+                        Razón / Motivo
+                      </label>
+                      <p className="text-gray-800 mt-1">
+                        {selectedSolicitud.reason || "N/A"}
+                      </p>
                     </div>
 
                     {/* Detalles Financieros */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-semibold text-gray-600">Monto Solicitado</label>
+                        <label className="text-sm font-semibold text-gray-600">
+                          Monto Solicitado
+                        </label>
                         <p className="text-2xl font-bold text-purple-600 mt-1">
-                          Q{selectedSolicitud.requestAmount?.toLocaleString() || '0.00'}
+                          Q
+                          {selectedSolicitud.requestAmount?.toLocaleString() ||
+                            "0.00"}
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-semibold text-gray-600">Fecha de Solicitud</label>
+                        <label className="text-sm font-semibold text-gray-600">
+                          Fecha de Solicitud
+                        </label>
                         <p className="text-gray-800 mt-1">
-                          {selectedSolicitud.requestDate 
+                          {selectedSolicitud.requestDate
                             ? (() => {
-                                const date = parseDate(selectedSolicitud.requestDate);
-                                return date ? date.toLocaleDateString('es-ES', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric'
-                                }) : 'N/A';
+                                const date = parseDate(
+                                  selectedSolicitud.requestDate,
+                                );
+                                return date
+                                  ? date.toLocaleDateString("es-ES", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    })
+                                  : "N/A";
                               })()
-                            : 'N/A'}
+                            : "N/A"}
                         </p>
                       </div>
                     </div>
@@ -322,28 +363,36 @@ export function Component() {
                     {/* Información Adicional */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-semibold text-gray-600">Origen</label>
-                        <p className="text-gray-800 mt-1">{selectedSolicitud.origin?.name || 'N/A'}</p>
+                        <label className="text-sm font-semibold text-gray-600">
+                          Origen
+                        </label>
+                        <p className="text-gray-800 mt-1">
+                          {selectedSolicitud.origin?.name || "N/A"}
+                        </p>
                       </div>
                       <div>
-                        <label className="text-sm font-semibold text-gray-600">Prioridad</label>
-                        <p className="text-gray-800 mt-1">{selectedSolicitud.priority?.name || 'N/A'}</p>
+                        <label className="text-sm font-semibold text-gray-600">
+                          Prioridad
+                        </label>
+                        <p className="text-gray-800 mt-1">
+                          {selectedSolicitud.priority?.name || "N/A"}
+                        </p>
                       </div>
                     </div>
                   </div>
-                )}
+                ) : null}
               </ModalBody>
               <ModalFooter className="border-t">
                 <Button color="default" variant="light" onPress={onClose}>
                   Cerrar
                 </Button>
                 {/* Solo mostrar botones de Aprobar/Rechazar si está Pendiente */}
-                {selectedSolicitud?.requestStatus?.name === 'Pendiente' && (
+                {selectedSolicitud?.requestStatus?.name === "Pendiente" && (
                   <>
-                    <Button 
-                      color="danger" 
-                      variant="flat"
+                    <Button
+                      color="danger"
                       startContent={<Icon name="bi bi-x-circle" size={18} />}
+                      variant="flat"
                       onPress={() => {
                         setIsModalOpen(false);
                         setIsRejectModalOpen(true);
@@ -351,10 +400,12 @@ export function Component() {
                     >
                       Rechazar
                     </Button>
-                    <Button 
-                      color="success" 
+                    <Button
+                      color="success"
+                      startContent={
+                        <Icon name="bi bi-check-circle" size={18} />
+                      }
                       variant="shadow"
-                      startContent={<Icon name="bi bi-check-circle" size={18} />}
                       onPress={handleAprobar}
                     >
                       Aprobar
@@ -362,16 +413,20 @@ export function Component() {
                   </>
                 )}
                 {/* Mostrar mensaje si ya está aprobada o rechazada */}
-                {selectedSolicitud?.requestStatus?.name === 'Aprobada' && (
+                {selectedSolicitud?.requestStatus?.name === "Aprobada" && (
                   <div className="flex items-center gap-2 text-green-600">
                     <Icon name="bi bi-check-circle-fill" size={18} />
-                    <span className="text-sm font-medium">Esta solicitud ya fue aprobada</span>
+                    <span className="text-sm font-medium">
+                      Esta solicitud ya fue aprobada
+                    </span>
                   </div>
                 )}
-                {selectedSolicitud?.requestStatus?.name === 'Rechazada' && (
+                {selectedSolicitud?.requestStatus?.name === "Rechazada" && (
                   <div className="flex items-center gap-2 text-red-600">
                     <Icon name="bi bi-x-circle-fill" size={18} />
-                    <span className="text-sm font-medium">Esta solicitud ya fue rechazada</span>
+                    <span className="text-sm font-medium">
+                      Esta solicitud ya fue rechazada
+                    </span>
                   </div>
                 )}
               </ModalFooter>
@@ -381,13 +436,13 @@ export function Component() {
       </Modal>
 
       {/* Modal de Rechazo */}
-      <Modal 
-        isOpen={isRejectModalOpen} 
+      <Modal
+        isOpen={isRejectModalOpen}
+        size="lg"
         onClose={() => {
           setIsRejectModalOpen(false);
           setRazonRechazo("");
         }}
-        size="lg"
       >
         <ModalContent>
           {(onClose) => (
@@ -395,14 +450,20 @@ export function Component() {
               <ModalHeader className="flex flex-col gap-1 border-b">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <Icon name="bi bi-x-circle" size={24} color="text-red-600" />
+                    <Icon
+                      color="text-red-600"
+                      name="bi bi-x-circle"
+                      size={24}
+                    />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-800">
                       Rechazar Solicitud de Evento
                     </h3>
                     <p className="text-sm text-gray-500">
-                      #{selectedSolicitud?.requestNumber || selectedSolicitud?.id}
+                      #
+                      {selectedSolicitud?.requestNumber ||
+                        selectedSolicitud?.id}
                     </p>
                   </div>
                 </div>
@@ -413,7 +474,9 @@ export function Component() {
                     <p className="text-sm text-gray-600 mb-4">
                       Se enviará un correo electrónico a{" "}
                       <strong className="text-gray-800">
-                        {selectedSolicitud?.email || selectedSolicitud?.contactEmail || 'correo no disponible'}
+                        {selectedSolicitud?.email ||
+                          selectedSolicitud?.contactEmail ||
+                          "correo no disponible"}
                       </strong>{" "}
                       con la razón del rechazo.
                     </p>
@@ -424,23 +487,30 @@ export function Component() {
                       Razón del Rechazo *
                     </label>
                     <Textarea
-                      placeholder="Ingrese la razón del rechazo de la solicitud de evento..."
-                      value={razonRechazo}
-                      onValueChange={setRazonRechazo}
-                      minRows={4}
-                      variant="bordered"
                       classNames={{
                         input: "resize-y",
                       }}
+                      minRows={4}
+                      placeholder="Ingrese la razón del rechazo de la solicitud de evento..."
+                      value={razonRechazo}
+                      variant="bordered"
+                      onValueChange={setRazonRechazo}
                     />
                   </div>
 
                   <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
                     <div className="flex items-start gap-3">
-                      <Icon name="bi bi-exclamation-triangle" size={20} color="text-yellow-600" />
+                      <Icon
+                        color="text-yellow-600"
+                        name="bi bi-exclamation-triangle"
+                        size={20}
+                      />
                       <div className="text-sm text-yellow-800">
                         <p className="font-semibold mb-1">Importante:</p>
-                        <p>Esta acción no se puede deshacer. El solicitante será notificado por correo electrónico.</p>
+                        <p>
+                          Esta acción no se puede deshacer. El solicitante será
+                          notificado por correo electrónico.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -450,11 +520,11 @@ export function Component() {
                 <Button color="default" variant="light" onPress={onClose}>
                   Cancelar
                 </Button>
-                <Button 
-                  color="danger" 
-                  variant="shadow"
+                <Button
+                  color="danger"
                   isDisabled={!razonRechazo.trim()}
                   startContent={<Icon name="bi bi-send" size={18} />}
+                  variant="shadow"
                   onPress={handleRechazar}
                 >
                   Enviar Rechazo
