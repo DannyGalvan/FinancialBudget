@@ -18,7 +18,9 @@
         {
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("default"));
+                options.UseNpgsql(configuration.GetConnectionString("default"))
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging();
             });
 
             return services;

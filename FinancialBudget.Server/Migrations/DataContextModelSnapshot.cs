@@ -238,7 +238,7 @@ namespace FinancialBudget.Server.Migrations
                             ModuleId = 1L,
                             Name = "Solicitudes Mantenimiento",
                             Path = "/Request/Maintenance",
-                            Policy = "Request.Maintenance",
+                            Policy = "Request.Create",
                             State = 1
                         },
                         new
@@ -246,12 +246,12 @@ namespace FinancialBudget.Server.Migrations
                             Id = 2L,
                             CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             CreatedBy = 1L,
-                            Icon = "cash",
+                            Icon = "bi bi-calendar-event",
                             IsVisible = true,
                             ModuleId = 1L,
                             Name = "Solicitudes Eventos",
                             Path = "/Request/Events",
-                            Policy = "Request.Events",
+                            Policy = "Request.Create",
                             State = 1
                         },
                         new
@@ -259,7 +259,46 @@ namespace FinancialBudget.Server.Migrations
                             Id = 3L,
                             CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             CreatedBy = 1L,
-                            Icon = "bi bi-list",
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Actualizacion de solicitudes",
+                            Path = "/Request/Update",
+                            Policy = "Request.Update",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Eliminacion de solicitudes",
+                            Path = "/Request/Events",
+                            Policy = "Request.Delete",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Consulta de solicitudes",
+                            Path = "/Request/List",
+                            Policy = "Request.List",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "bi bi-graph-up",
                             IsVisible = true,
                             ModuleId = 1L,
                             Name = "Reporte Financiero",
@@ -269,7 +308,7 @@ namespace FinancialBudget.Server.Migrations
                         },
                         new
                         {
-                            Id = 4L,
+                            Id = 7L,
                             CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             CreatedBy = 1L,
                             Icon = "bi bi-list",
@@ -278,6 +317,149 @@ namespace FinancialBudget.Server.Migrations
                             Name = "Reporte Resumen Ciudadania",
                             Path = "/Report/SummaryCitizenship",
                             Policy = "Report.SummaryCitizenship",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Crear Catalogo",
+                            Path = "/Catalogue/Create",
+                            Policy = "Catalogue.Create",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Actualizar Catalogo",
+                            Path = "/Catalogue/Update",
+                            Policy = "Catalogue.Update",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Eliminar Catalogo",
+                            Path = "/Catalogue/Delete",
+                            Policy = "Catalogue.Delete",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "bi bi-cash",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Crear Presupuesto",
+                            Path = "/Budget/Create",
+                            Policy = "Budget.Create",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "bi bi-calendar-event",
+                            IsVisible = true,
+                            ModuleId = 1L,
+                            Name = "Actualizar Presupuesto",
+                            Path = "/Budget/Update",
+                            Policy = "Budget.Update",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Eliminar Presupuesto",
+                            Path = "/Budget/Delete",
+                            Policy = "Budget.Delete",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Listar Presupuesto",
+                            Path = "/Budget/List",
+                            Policy = "Budget.List",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "bi bi-cash",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Crear Partida Presupuestaria",
+                            Path = "/BudgetItem/Create",
+                            Policy = "BudgetItem.Create",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "bi bi-calendar-event",
+                            IsVisible = true,
+                            ModuleId = 1L,
+                            Name = "Actualizar Partida Presupuestaria",
+                            Path = "/BudgetItem/Update",
+                            Policy = "BudgetItem.Update",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Eliminar Partida Presupuestaria",
+                            Path = "/BudgetItem/Delete",
+                            Policy = "BudgetItem.Delete",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Icon = "",
+                            IsVisible = false,
+                            ModuleId = 1L,
+                            Name = "Listar Partida Presupuestaria",
+                            Path = "/BudgetItem/List",
+                            Policy = "BudgetItem.List",
                             State = 1
                         });
                 });
@@ -400,7 +582,7 @@ namespace FinancialBudget.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTimeOffset>("ApprovedDate")
+                    b.Property<DateTimeOffset?>("ApprovedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("AuthorizedReason")
@@ -568,6 +750,30 @@ namespace FinancialBudget.Server.Migrations
                             CreatedBy = 1L,
                             Name = "SA",
                             State = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Name = "EVENTOS",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Name = "MANTENIMIENTO",
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Name = "CIUDADANIA",
+                            State = 1
                         });
                 });
 
@@ -644,6 +850,186 @@ namespace FinancialBudget.Server.Migrations
                             OperationId = 4L,
                             RolId = 1L,
                             State = 1
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 5L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 6L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 7L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 8L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 9L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 10L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 11L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 12L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 13L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 14L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 15L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 16L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 17L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 18L,
+                            RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 14L,
+                            RolId = 4L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 18L,
+                            RolId = 4L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 1L,
+                            RolId = 2L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 5L,
+                            RolId = 2L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 2L,
+                            RolId = 3L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            OperationId = 5L,
+                            RolId = 3L,
+                            State = 1
                         });
                 });
 
@@ -706,10 +1092,16 @@ namespace FinancialBudget.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("AuthorizeUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Comments")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<long>("CreateUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -732,16 +1124,15 @@ namespace FinancialBudget.Server.Migrations
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorizeUserId");
+
+                    b.HasIndex("CreateUserId");
 
                     b.HasIndex("RequestId");
 
                     b.HasIndex("RequestStatusId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Traceabilities");
                 });
@@ -803,6 +1194,39 @@ namespace FinancialBudget.Server.Migrations
                             Name = "Super Administrador",
                             Password = "$2a$12$86Ty8oUVWKPbU8JqCII9VO.FgM1C10dweQ4xKhM4jj1LWL9jwNu7.",
                             RolId = 1L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Email = "mantenimiento@gmail.com",
+                            Name = "Mantenimiento",
+                            Password = "$2a$12$86Ty8oUVWKPbU8JqCII9VO.FgM1C10dweQ4xKhM4jj1LWL9jwNu7.",
+                            RolId = 2L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Email = "eventos@gmail.com",
+                            Name = "Eventos",
+                            Password = "$2a$12$86Ty8oUVWKPbU8JqCII9VO.FgM1C10dweQ4xKhM4jj1LWL9jwNu7.",
+                            RolId = 3L,
+                            State = 1
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            CreatedBy = 1L,
+                            Email = "ciudadana@gmail.com",
+                            Name = "Participacion ciudadana",
+                            Password = "$2a$12$86Ty8oUVWKPbU8JqCII9VO.FgM1C10dweQ4xKhM4jj1LWL9jwNu7.",
+                            RolId = 4L,
                             State = 1
                         });
                 });
@@ -905,6 +1329,18 @@ namespace FinancialBudget.Server.Migrations
 
             modelBuilder.Entity("FinancialBudget.Server.Entities.Models.Traceability", b =>
                 {
+                    b.HasOne("FinancialBudget.Server.Entities.Models.User", "AuthorizeUser")
+                        .WithMany("AuthorizeTraceabilities")
+                        .HasForeignKey("AuthorizeUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FinancialBudget.Server.Entities.Models.User", "CreateUser")
+                        .WithMany("CreateTraceabilities")
+                        .HasForeignKey("CreateUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FinancialBudget.Server.Entities.Models.Request", "Request")
                         .WithMany("Traceabilities")
                         .HasForeignKey("RequestId")
@@ -917,17 +1353,13 @@ namespace FinancialBudget.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FinancialBudget.Server.Entities.Models.User", "User")
-                        .WithMany("Traceabilities")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("AuthorizeUser");
+
+                    b.Navigation("CreateUser");
 
                     b.Navigation("Request");
 
                     b.Navigation("RequestStatus");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FinancialBudget.Server.Entities.Models.User", b =>
@@ -996,7 +1428,9 @@ namespace FinancialBudget.Server.Migrations
 
             modelBuilder.Entity("FinancialBudget.Server.Entities.Models.User", b =>
                 {
-                    b.Navigation("Traceabilities");
+                    b.Navigation("AuthorizeTraceabilities");
+
+                    b.Navigation("CreateTraceabilities");
                 });
 #pragma warning restore 612, 618
         }

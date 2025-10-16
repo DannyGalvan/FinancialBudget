@@ -23,6 +23,36 @@ namespace FinancialBudget.Server.Context.Config
                     CreatedBy = 1,
                     UpdatedAt = null,
                     UpdatedBy = null
+                },
+                new Rol
+                {
+                    Id = 2,
+                    Name = "EVENTOS",
+                    State = 1,
+                    CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                    CreatedBy = 1,
+                    UpdatedAt = null,
+                    UpdatedBy = null
+                },
+                new Rol
+                {
+                    Id = 3,
+                    Name = "MANTENIMIENTO",
+                    State = 1,
+                    CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                    CreatedBy = 1,
+                    UpdatedAt = null,
+                    UpdatedBy = null
+                },
+                new Rol
+                {
+                    Id = 4,
+                    Name = "CIUDADANIA",
+                    State = 1,
+                    CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                    CreatedBy = 1,
+                    UpdatedAt = null,
+                    UpdatedBy = null
                 }
             );
         }

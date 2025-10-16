@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialBudget.Server", "F
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "financialBudget.client", "financialBudget.client\financialBudget.client.esproj", "{625059EF-21A8-42A5-B3B7-887D5D3CE54E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFinancialBudget", "TestFinancialBudget\TestFinancialBudget.csproj", "{A8400881-D010-487D-B7D0-0A2405EDC70D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{625059EF-21A8-42A5-B3B7-887D5D3CE54E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{625059EF-21A8-42A5-B3B7-887D5D3CE54E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{625059EF-21A8-42A5-B3B7-887D5D3CE54E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{A8400881-D010-487D-B7D0-0A2405EDC70D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8400881-D010-487D-B7D0-0A2405EDC70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8400881-D010-487D-B7D0-0A2405EDC70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8400881-D010-487D-B7D0-0A2405EDC70D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

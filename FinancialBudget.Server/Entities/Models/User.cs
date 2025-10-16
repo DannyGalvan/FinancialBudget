@@ -17,6 +17,7 @@ namespace FinancialBudget.Server.Entities.Models
         public long? UpdatedBy { get; set; }
 
         public virtual Rol? Rol { get; set; }
-        public virtual ICollection<Traceability>? Traceabilities { get; set; }
+        public virtual ICollection<Traceability>? CreateTraceabilities { get; set; }
+        public virtual ICollection<Traceability>? AuthorizeTraceabilities { get; set; }
     }
 }
