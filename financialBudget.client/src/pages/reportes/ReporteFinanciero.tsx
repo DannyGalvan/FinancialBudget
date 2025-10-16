@@ -44,50 +44,33 @@ export function Component() {
     try {
       setLoading(true);
       
-      console.log('🔄 CARGANDO DATOS DEL REPORTE...');
-      
       const [statsResponse, pendingResponse, transactionsResponse] = await Promise.all([
         getDashboardStats(),
         getPendingSolicitudesStats(),
         getTransactionHistory(1000) // Todas las transacciones
       ]);
 
-      console.log('📦 RESPUESTAS RECIBIDAS:', {
-        stats: statsResponse.success,
-        pending: pendingResponse.success,
-        transactions: transactionsResponse.success
-      });
-
       if (statsResponse.success && statsResponse.data) {
-        console.log('✅ Stats cargadas:', statsResponse.data);
         setStats(statsResponse.data);
       }
 
       if (pendingResponse.success && pendingResponse.data) {
-        console.log('✅ Pending stats cargadas:', pendingResponse.data);
         setPendingStats(pendingResponse.data);
       }
 
       if (transactionsResponse.success && transactionsResponse.data) {
-        console.log('✅ Transacciones cargadas:', transactionsResponse.data.length, 'registros');
-        console.log('📋 Primeras 3 transacciones:', transactionsResponse.data.slice(0, 3));
         setTransactions(transactionsResponse.data);
         processMonthlyData(transactionsResponse.data);
-      } else {
-        console.log('❌ No se cargaron transacciones:', transactionsResponse);
       }
 
     } catch (error) {
-      console.error("❌ ERROR loading report data:", error);
+      console.error("Error loading report data:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const processMonthlyData = (transactions: TransactionHistory[]) => {
-    console.log('📅 PROCESANDO DATOS MENSUALES...');
-    console.log('📅 Total transacciones recibidas:', transactions.length);
-    
     const monthMap = new Map<string, { mantenimiento: number; eventos: number }>();
     
     const aprobadas = transactions.filter(t => {
@@ -96,34 +79,13 @@ export function Component() {
                          t.statusName?.toLowerCase() === 'aprobada';
       return isAprobada;
     });
-
-    console.log('📅 Transacciones aprobadas encontradas:', aprobadas.length);
-    
-    if (aprobadas.length > 0) {
-      console.log('📅 Muestra de aprobadas:', aprobadas.slice(0, 3).map(t => ({
-        nombre: t.name,
-        fecha: t.requestDate,
-        monto: t.requestAmount,
-        origen: t.originName,
-        originId: t.originId
-      })));
-    }
     
     aprobadas.forEach(transaction => {
-      console.log('📅 Procesando transacción:', {
-        nombre: transaction.name,
-        fecha: transaction.requestDate,
-        monto: transaction.requestAmount,
-        originId: transaction.originId
-      });
-      
       if (transaction.requestDate) {
         const date = parseDate(transaction.requestDate);
-        console.log('📅 Fecha parseada:', date);
         
         if (date) {
           const monthKey = date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-          console.log('📅 Clave del mes:', monthKey);
           
           if (!monthMap.has(monthKey)) {
             monthMap.set(monthKey, { mantenimiento: 0, eventos: 0 });
@@ -134,22 +96,12 @@ export function Component() {
           
           if (transaction.originId === 1) {
             monthData.mantenimiento += amount;
-            console.log(`📅 Agregado a Mantenimiento: Q${amount}`);
           } else if (transaction.originId === 2) {
             monthData.eventos += amount;
-            console.log(`📅 Agregado a Eventos: Q${amount}`);
-          } else {
-            console.log(`⚠️ OriginId desconocido: ${transaction.originId}`);
           }
-        } else {
-          console.log('❌ No se pudo parsear la fecha:', transaction.requestDate);
         }
-      } else {
-        console.log('❌ Transacción sin fecha:', transaction.name);
       }
     });
-
-    console.log('📅 Mapa mensual completo:', Array.from(monthMap.entries()));
 
     const monthlyArray: MonthlyData[] = Array.from(monthMap.entries()).map(([month, data]) => ({
       month,
@@ -160,9 +112,6 @@ export function Component() {
 
     // Ordenar por fecha (más reciente primero)
     monthlyArray.sort((a, b) => b.month.localeCompare(a.month));
-    
-    console.log('📅 REPORTE - Datos mensuales procesados (antes de slice):', monthlyArray);
-    console.log('📅 REPORTE - Datos mensuales finales (después de slice):', monthlyArray.slice(0, 12));
     
     setMonthlyData(monthlyArray.slice(0, 12)); // Últimos 12 meses
   };
@@ -196,15 +145,6 @@ export function Component() {
     return <LoadingComponent />;
   }
 
-  console.log('📊 REPORTE - Total transacciones:', transactions.length);
-  console.log('📊 REPORTE - Muestra de estados:', transactions.slice(0, 5).map(t => ({
-    id: t.id,
-    nombre: t.name,
-    estado: t.statusName,
-    monto: t.requestAmount,
-    origen: t.originName
-  })));
-
   const aprobadasCount = transactions.filter(t => {
     const isAprobada = t.statusName?.toLowerCase().includes('aprobada') || 
                        t.statusName?.toLowerCase().includes('aprobado') ||
@@ -220,8 +160,6 @@ export function Component() {
   }).length;
 
   const totalSolicitudes = transactions.length;
-
-  console.log('📊 REPORTE - Aprobadas:', aprobadasCount, 'Rechazadas:', rechazadasCount, 'Total:', totalSolicitudes);
 
   const mantenimientoTotal = transactions
     .filter(t => {
@@ -240,8 +178,6 @@ export function Component() {
       return isEventos && isAprobada;
     })
     .reduce((sum, t) => sum + (t.requestAmount || 0), 0);
-
-  console.log('📊 REPORTE - Mantenimiento Total:', mantenimientoTotal, 'Eventos Total:', eventosTotal);
 
   return (
     <div className="p-6 space-y-6 print:p-4">
@@ -494,12 +430,6 @@ export function Component() {
             <Icon name="bi bi-calendar3" size={20} color="text-indigo-600" />
             Gastos Mensuales Aprobados
           </h2>
-
-          {(() => {
-            console.log('📊 RENDERIZANDO TABLA - monthlyData.length:', monthlyData.length);
-            console.log('📊 RENDERIZANDO TABLA - monthlyData:', monthlyData);
-            return null;
-          })()}
 
           {monthlyData.length > 0 ? (
             <div className="overflow-x-auto">

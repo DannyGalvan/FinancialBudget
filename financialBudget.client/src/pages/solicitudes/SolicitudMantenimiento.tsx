@@ -64,7 +64,6 @@ export function Component() {
   const loadSolicitudes = async () => {
     try {
       setLoading(true);
-      console.log('🔄 Cargando solicitudes de mantenimiento pendientes...');
       
       // Filtrar por: OriginId = 1 (Mantenimiento) Y RequestStatusId = 1 (Pendiente)
       const response = await getSolicitudesFiltered(
@@ -75,18 +74,14 @@ export function Component() {
         1,
         100
       );
-      console.log('📦 Respuesta del servidor:', response);
       
       handleApiResponse(response);
       
       if (response.success && response.data) {
-        console.log('✅ Datos recibidos:', response.data);
         setSolicitudes(response.data);
-      } else {
-        console.log('❌ Error en respuesta:', response.message);
       }
     } catch (error) {
-      console.error("❌ Error loading solicitudes:", error);
+      console.error("Error loading solicitudes:", error);
     } finally {
       setLoading(false);
     }
@@ -241,7 +236,7 @@ export function Component() {
                         {solicitud.priority?.name || 'N/A'}
                       </div>
                       <div className="text-sm font-semibold text-gray-700">
-                        ${solicitud.requestAmount?.toLocaleString() || '0.00'}
+                        Q{solicitud.requestAmount?.toLocaleString() || '0.00'}
                       </div>
                       <div
                         className={`text-sm font-bold text-right ${getEstadoColor(solicitud.requestStatus?.name || 'Pendiente')}`}
@@ -310,7 +305,7 @@ export function Component() {
                       <div>
                         <label className="text-sm font-semibold text-gray-600">Monto Solicitado</label>
                         <p className="text-2xl font-bold text-blue-600 mt-1">
-                          ${selectedSolicitud.requestAmount?.toLocaleString() || '0.00'}
+                          Q{selectedSolicitud.requestAmount?.toLocaleString() || '0.00'}
                         </p>
                       </div>
                       <div>

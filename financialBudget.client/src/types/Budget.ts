@@ -41,6 +41,14 @@ export interface DashboardStats {
   usagePercentage: number;
   lastMonthUsage: number;
   currentMonthUsage: number;
+  monthlyUsage?: MonthlyUsage[];  // Últimos 12 meses
+}
+
+export interface MonthlyUsage {
+  month: string;      // Nombre del mes (ej: "Enero")
+  monthNumber: number; // Número del mes (0-11)
+  year: number;       // Año
+  amount: number;     // Monto gastado
 }
 
 export interface PendingSolicitudesStats {

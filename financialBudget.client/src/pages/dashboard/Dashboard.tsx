@@ -38,8 +38,6 @@ export function Dashboard() {
     try {
       setLoading(true);
       
-      console.log('🔄 Cargando datos del dashboard...');
-      
       // Cargar todas las estadísticas en paralelo
       const [statsResponse, pendingResponse, transactionsResponse] = await Promise.all([
         getDashboardStats(),
@@ -47,26 +45,19 @@ export function Dashboard() {
         getTransactionHistory(10)
       ]);
 
-      console.log('📊 Respuesta de getDashboardStats:', statsResponse);
-
       if (statsResponse.success && statsResponse.data) {
-        console.log('✅ Stats recibidas:', statsResponse.data);
         setStats(statsResponse.data);
-      } else {
-        console.error('❌ Error obteniendo stats:', statsResponse.message);
       }
 
       if (pendingResponse.success && pendingResponse.data) {
-        console.log('✅ Pending stats recibidas:', pendingResponse.data);
         setPendingStats(pendingResponse.data);
       }
 
       if (transactionsResponse.success && transactionsResponse.data) {
-        console.log('✅ Transactions recibidas:', transactionsResponse.data);
         setTransactions(transactionsResponse.data);
       }
     } catch (error) {
-      console.error("❌ Error al cargar datos del dashboard:", error);
+      console.error("Error al cargar datos del dashboard:", error);
     } finally {
       setLoading(false);
     }
@@ -140,8 +131,7 @@ export function Dashboard() {
             <div className="h-64 bg-white rounded-2xl flex items-center justify-center border border-gray-100">
               {stats ? (
                 <BudgetChart 
-                  lastMonthUsage={stats.lastMonthUsage}
-                  currentMonthUsage={stats.currentMonthUsage}
+                  monthlyUsage={stats.monthlyUsage}
                   totalBudget={stats.totalBudget}
                 />
               ) : (
@@ -155,11 +145,11 @@ export function Dashboard() {
             <div className="flex justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                <span className="text-xs text-gray-600">Este Mes</span>
+                <span className="text-xs text-gray-600">Mes Actual</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-purple-300"></div>
-                <span className="text-xs text-gray-600">Mes Pasado</span>
+                <span className="text-xs text-gray-600">Meses Anteriores</span>
               </div>
             </div>
           </div>

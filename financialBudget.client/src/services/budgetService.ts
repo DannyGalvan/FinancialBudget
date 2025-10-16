@@ -1,29 +1,36 @@
 import { api } from "../configs/axios/interceptors";
 import type { ApiResponse } from "../types/ApiResponse";
-import type { Budget, DashboardStats, PendingSolicitudesStats, TransactionHistory } from "../types/Budget";
+import type { Budget, DashboardStats, MonthlyUsage, PendingSolicitudesStats, TransactionHistory } from "../types/Budget";
+
+// Función para parsear fechas en formato DD/MM/YYYY
+const parseDate = (dateStr: string): Date | null => {
+  if (!dateStr) return null;
+  
+  // Si es formato ISO (YYYY-MM-DD o con hora)
+  if (dateStr.includes('-') && dateStr.indexOf('-') === 4) {
+    return new Date(dateStr);
+  }
+  
+  // Si es formato DD/MM/YYYY
+  if (dateStr.includes('/')) {
+    const [day, month, year] = dateStr.split('/');
+    return new Date(`${year}-${month}-${day}`);
+  }
+  
+  return null;
+};
 
 /**
  * Obtiene el presupuesto actual
  */
 export const getCurrentBudget = async () => {
   try {
-    console.log('🔄 Obteniendo presupuesto actual desde /Budget...');
     const response = await api.get<unknown, ApiResponse<Budget[]>>(
       `/Budget?PageNumber=1&PageSize=1&IncludeTotal=true`
     );
-    console.log('📦 Respuesta de /Budget:', response);
-    if (response.success && response.data && response.data.length > 0 && !Array.isArray(response.data[0])) {
-      const budget = response.data[0] as Budget;
-      console.log('💰 Presupuesto obtenido:', {
-        authorizedAmount: budget.authorizedAmount,  // Total autorizado
-        committedAmount: budget.committedAmount,    // Usado
-        availableAmount: budget.availableAmount,    // Disponible
-        period: budget.period
-      });
-    }
     return response;
   } catch (error) {
-    console.error("❌ Error al obtener presupuesto:", error);
+    console.error("Error al obtener presupuesto:", error);
     throw error;
   }
 };
@@ -34,13 +41,10 @@ export const getCurrentBudget = async () => {
  */
 export const getDashboardStats = async (): Promise<ApiResponse<DashboardStats>> => {
   try {
-    console.log('📊 Iniciando obtención de estadísticas del dashboard...');
-    
     // Obtener el presupuesto actual
     const budgetResponse = await getCurrentBudget();
     
     if (!budgetResponse.success || !budgetResponse.data || budgetResponse.data.length === 0) {
-      console.error('❌ No se pudo obtener el presupuesto o está vacío');
       return {
         success: false,
         message: "No se pudo obtener el presupuesto",
@@ -50,19 +54,12 @@ export const getDashboardStats = async (): Promise<ApiResponse<DashboardStats>> 
     }
 
     const budget = budgetResponse.data[0] as Budget;
-    console.log('✅ Budget obtenido correctamente:', budget);
     
     // Calcular fechas del mes pasado y actual
     const now = new Date();
     const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-    
-    console.log('📅 Fechas calculadas:', {
-      currentMonthStart: currentMonthStart.toISOString(),
-      lastMonthStart: lastMonthStart.toISOString(),
-      lastMonthEnd: lastMonthEnd.toISOString()
-    });
     
     // Obtener solicitudes aprobadas del mes pasado
     const lastMonthFilters = `RequestStatusId:eq:2 AND RequestDate:gte:${lastMonthStart.toISOString()} AND RequestDate:lte:${lastMonthEnd.toISOString()}`;
@@ -79,11 +76,6 @@ export const getDashboardStats = async (): Promise<ApiResponse<DashboardStats>> 
     const lastMonthUsage = lastMonthResponse.data?.reduce((sum, req) => sum + (req.requestAmount || 0), 0) || 0;
     const currentMonthUsage = currentMonthResponse.data?.reduce((sum, req) => sum + (req.requestAmount || 0), 0) || 0;
     
-    console.log('📈 Uso calculado:', {
-      lastMonthUsage,
-      currentMonthUsage
-    });
-    
     // Calcular el total usado: sumar TODAS las solicitudes aprobadas (sin filtro de fecha)
     const allApprovedFilters = `RequestStatusId:eq:2`; // Solo aprobadas
     const allApprovedResponse = await api.get<unknown, ApiResponse<any[]>>(
@@ -92,8 +84,46 @@ export const getDashboardStats = async (): Promise<ApiResponse<DashboardStats>> 
     
     const totalUsedFromRequests = allApprovedResponse.data?.reduce((sum, req) => sum + (req.requestAmount || 0), 0) || 0;
     
-    console.log('💰 Total usado calculado desde solicitudes aprobadas:', totalUsedFromRequests);
-    console.log('📊 Total de solicitudes aprobadas:', allApprovedResponse.data?.length || 0);
+    // Calcular gastos de los últimos 12 meses
+    const monthlyUsage: MonthlyUsage[] = [];
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    console.log('=== DEBUG: Calculando gastos mensuales ===');
+    console.log('Total solicitudes aprobadas:', allApprovedResponse.data?.length || 0);
+    console.log('Fechas de muestra:', allApprovedResponse.data?.slice(0, 3).map(r => ({ 
+      fecha: r.requestDate, 
+      monto: r.requestAmount 
+    })));
+    
+    // Iterar los últimos 12 meses
+    for (let i = 11; i >= 0; i--) {
+      const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+      const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0, 23, 59, 59);
+      
+      // Filtrar solicitudes de este mes
+      const monthData = allApprovedResponse.data?.filter(req => {
+        if (!req.requestDate) return false;
+        const requestDate = parseDate(req.requestDate);
+        if (!requestDate) return false;
+        
+        // Comparar solo año y mes
+        return requestDate >= monthStart && requestDate <= monthEnd;
+      }) || [];
+      
+      const monthAmount = monthData.reduce((sum, req) => sum + (req.requestAmount || 0), 0);
+      
+      console.log(`${monthNames[monthDate.getMonth()]} ${monthDate.getFullYear()}: Q${monthAmount} (${monthData.length} solicitudes)`);
+      
+      monthlyUsage.push({
+        month: monthNames[monthDate.getMonth()],
+        monthNumber: monthDate.getMonth(),
+        year: monthDate.getFullYear(),
+        amount: monthAmount
+      });
+    }
+    
+    console.log('=== FIN DEBUG ===');
     
     // Usar los campos correctos del backend
     const totalBudget = budget.authorizedAmount || 0;      // Total autorizado
@@ -106,10 +136,9 @@ export const getDashboardStats = async (): Promise<ApiResponse<DashboardStats>> 
       availableBudget: availableBudget,
       usagePercentage: totalBudget > 0 ? (usedBudget / totalBudget) * 100 : 0,
       lastMonthUsage,
-      currentMonthUsage
+      currentMonthUsage,
+      monthlyUsage
     };
-
-    console.log('✅ Estadísticas finales del dashboard:', stats);
 
     return {
       success: true,
@@ -224,17 +253,9 @@ export const getTransactionHistory = async (limit: number = 10): Promise<ApiResp
     // Obtener solicitudes aprobadas (2) o rechazadas (3)
     const filters = `RequestStatusId:eq:2 OR RequestStatusId:eq:3`;
     
-    console.log(`🔍 getTransactionHistory - Consultando con límite: ${limit}`);
-    
     const response = await api.get<unknown, ApiResponse<any[]>>(
       `/Request?Filters=${encodeURIComponent(filters)}&Include=origin,requestStatus,priority&PageNumber=1&PageSize=${limit}&IncludeTotal=true`
     );
-
-    console.log('📦 getTransactionHistory - Respuesta recibida:', {
-      success: response.success,
-      total: response.data?.length,
-      muestra: response.data?.slice(0, 2)
-    });
 
     if (!response.success || !response.data) {
       return {
@@ -258,8 +279,6 @@ export const getTransactionHistory = async (limit: number = 10): Promise<ApiResp
       statusName: req.requestStatus?.name
     }));
 
-    console.log('✅ getTransactionHistory - Transacciones mapeadas:', transactions.length);
-
     return {
       success: true,
       message: "Historial obtenido exitosamente",
@@ -267,7 +286,7 @@ export const getTransactionHistory = async (limit: number = 10): Promise<ApiResp
       totalResults: transactions.length
     };
   } catch (error) {
-    console.error("❌ Error al obtener historial de transacciones:", error);
+    console.error("Error al obtener historial de transacciones:", error);
     return {
       success: false,
       message: "Error al obtener historial",
