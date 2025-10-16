@@ -1,7 +1,6 @@
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { lazy, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import ErrorBoundary from "../pages/error/ErrorBoundary";
@@ -48,7 +47,6 @@ function App() {
         />
         <QueryClientProvider client={client}>
           {loading ? <LoadingPage /> : <LazyAppRoutes />}
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </HeroUIProvider>
     </ErrorBoundary>

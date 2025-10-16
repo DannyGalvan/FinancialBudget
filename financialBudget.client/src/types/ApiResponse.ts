@@ -20,7 +20,7 @@ export type ApiResponse<T> =
     }
   | {
       success: false;
-      data: ValidationFailure[] | null;
+      data: ValidationFailure[];
       message: string;
       totalResults: number;
     };
