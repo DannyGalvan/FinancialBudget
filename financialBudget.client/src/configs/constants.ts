@@ -18,6 +18,8 @@ export const nameRoutes = {
   unauthorized: "/unauthorized",
   error: "/error",
   create: "create",
+  solicitudMantenimiento: "/solicitud-mantenimiento",
+  solicitudEventos: "/solicitud-eventos",
 };
 
 export const authInitialState: InitialAuth = {

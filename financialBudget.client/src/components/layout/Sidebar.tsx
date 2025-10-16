@@ -134,6 +134,7 @@ export function Sidebar() {
                   Opciones
                 </small>
                 <div className="flex flex-col gap-1">
+                  {/* Dynamic Operations from Auth */}
                   {operations?.map((menu) => 
                     menu.operations?.map((operation) => 
                       operation.isVisible && (
