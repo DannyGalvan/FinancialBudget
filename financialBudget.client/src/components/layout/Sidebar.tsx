@@ -136,8 +136,19 @@ export function Sidebar() {
                 <div className="flex flex-col gap-1">
                   {/* Dynamic Operations from Auth */}
                   {operations?.map((menu) => 
-                    menu.operations?.map((operation) => 
-                      operation.isVisible && (
+                    menu.operations?.map((operation) => {
+                      // Filtrar opciones específicas que no queremos mostrar
+                      const hiddenPaths = [
+                        '/report/summarycitizenship',
+                        '/budgetitem/update',
+                        '/budget/update'
+                      ];
+                      
+                      const shouldHide = hiddenPaths.some(path => 
+                        operation.path.toLowerCase() === path.toLowerCase()
+                      );
+                      
+                      return operation.isVisible && !shouldHide && (
                         <Link
                           key={operation.id}
                           viewTransition
@@ -151,8 +162,8 @@ export function Sidebar() {
                           <Icon name={operation.icon} size={20} color={pathname.toLowerCase() === operation.path.toLowerCase() ? "#197BBD" : "currentColor"} />
                           <span>{operation.name}</span>
                         </Link>
-                      )
-                    )
+                      );
+                    })
                   )}
                 </div>
               </div>
