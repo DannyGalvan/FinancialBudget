@@ -13,8 +13,8 @@ const pageComponentMap: Record<string, () => Promise<any>> = {
   "/request/maintenance": () => import("../pages/solicitudes/SolicitudMantenimiento"),
   "/request/events": () => import("../pages/solicitudes/SolicitudEventos"),
   "/solicitudes/historial": () => import("../pages/solicitudes/HistorialTransacciones"),
+  "/report/financial": () => import("../pages/reportes/ReporteFinanciero"),
   // Agrega más mapeos aquí según las rutas que tengas del backend
-  // "/report/financial": () => import("../pages/reportes/ReporteFinanciero"),
   // "/report/summarycitizenship": () => import("../pages/reportes/ResumenCiudadania"),
   // "/budget/update": () => import("../pages/presupuesto/ActualizarPresupuesto"),
   // "/budgetitem/update": () => import("../pages/presupuesto/ActualizarItemPresupuesto"),

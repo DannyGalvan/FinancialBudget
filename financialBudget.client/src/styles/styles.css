@@ -79,4 +79,34 @@
   --bs-light: white;
 }
 
+/* Print Styles */
+@media print {
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  .print\:p-4 {
+    padding: 1rem !important;
+  }
+  
+  .print\:mb-6 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  @page {
+    size: letter;
+    margin: 1.5cm;
+  }
+  
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  /* Evitar saltos de página en elementos importantes */
+  .card, .grid, table {
+    page-break-inside: avoid;
+  }
+}
+
 @config "../../tailwind.config.js";

@@ -223,9 +223,18 @@ export const getTransactionHistory = async (limit: number = 10): Promise<ApiResp
   try {
     // Obtener solicitudes aprobadas (2) o rechazadas (3)
     const filters = `RequestStatusId:eq:2 OR RequestStatusId:eq:3`;
+    
+    console.log(`🔍 getTransactionHistory - Consultando con límite: ${limit}`);
+    
     const response = await api.get<unknown, ApiResponse<any[]>>(
-      `/Request?Filters=${encodeURIComponent(filters)}&Include=origin,requestStatus&PageNumber=1&PageSize=${limit}&IncludeTotal=true`
+      `/Request?Filters=${encodeURIComponent(filters)}&Include=origin,requestStatus,priority&PageNumber=1&PageSize=${limit}&IncludeTotal=true`
     );
+
+    console.log('📦 getTransactionHistory - Respuesta recibida:', {
+      success: response.success,
+      total: response.data?.length,
+      muestra: response.data?.slice(0, 2)
+    });
 
     if (!response.success || !response.data) {
       return {
@@ -249,6 +258,8 @@ export const getTransactionHistory = async (limit: number = 10): Promise<ApiResp
       statusName: req.requestStatus?.name
     }));
 
+    console.log('✅ getTransactionHistory - Transacciones mapeadas:', transactions.length);
+
     return {
       success: true,
       message: "Historial obtenido exitosamente",
@@ -256,7 +267,7 @@ export const getTransactionHistory = async (limit: number = 10): Promise<ApiResp
       totalResults: transactions.length
     };
   } catch (error) {
-    console.error("Error al obtener historial de transacciones:", error);
+    console.error("❌ Error al obtener historial de transacciones:", error);
     return {
       success: false,
       message: "Error al obtener historial",
