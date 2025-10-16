@@ -122,7 +122,7 @@ namespace FinancialBudget.Server.Context.Config
                     Id = 7,
                     Name = "Reporte Resumen Ciudadania",
                     Policy = "Report.SummaryCitizenship",
-                    Icon = "bi bi-list",
+                    Icon = "bi bi-people",
                     Path = "/Report/SummaryCitizenship",
                     ModuleId = 1,
                     IsVisible = true,
