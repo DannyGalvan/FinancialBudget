@@ -155,7 +155,6 @@ export function Component() {
   const handleSelectSolicitud = useCallback((solicitud: Solicitud) => {
     setSelectedSolicitud(solicitud);
     setIsModalOpen(true);
-    return undefined;
   }, []);
 
   const handleCloseModal = useCallback(() => {
@@ -228,7 +227,7 @@ export function Component() {
                     <div
                       key={solicitud.id}
                       className="grid grid-cols-7 gap-4 items-center py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={handleSelectSolicitud(solicitud)}
+                      onClick={() => handleSelectSolicitud(solicitud)}
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
