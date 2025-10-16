@@ -34,7 +34,10 @@
         /// Obtener un presupuesto por id
         /// </summary>
         /// <param name="id">The id<see cref="long"/></param>
-        /// <param name="include">The include<see cref="string?"/></param>
+        /// <param name="include">The include<see>
+        ///         <cref>string?</cref>
+        ///     </see>
+        /// </param>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("{id:long}")]
         [Authorize(Policy = "Budget.List")]

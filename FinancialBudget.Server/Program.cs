@@ -3,8 +3,15 @@ using FinancialBudget.Server.Configs.Models;
 
 namespace FinancialBudget.Server
 {
+    /// <summary>
+    /// Entry point for the application.
+    /// </summary>
     public abstract class Program
     {
+        /// <summary>
+        /// Main entry point for the application.
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +62,18 @@ namespace FinancialBudget.Server
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(options =>
+            {
+                options.WithOrigins(
+                    "https://localhost",
+                    "http://localhost:4200",
+                    "http://localhost"
+                );
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+                options.AllowCredentials();
+            });
 
             app.UseAuthentication();
 
