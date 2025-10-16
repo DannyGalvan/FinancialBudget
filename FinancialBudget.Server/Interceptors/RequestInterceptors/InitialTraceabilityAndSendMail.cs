@@ -47,7 +47,7 @@ namespace FinancialBudget.Server.Interceptors.RequestInterceptors
                 _db.Traceabilities.Add(trace);
                 _db.SaveChanges();
 
-                _sendMail.Send(request.Email, "Solicitud Recibida", $"Su solicitud con ID {response.Data.Id} ha sido recibida y está en espera de autorización.");
+                _sendMail.Send(request.Email!, "Solicitud Recibida", $"Su solicitud con ID {response.Data.Id} ha sido recibida y está en espera de autorización.");
 
                 _sendMail.Send(userAutorize.Email, "Solicitud Recibida", $"La solicitud con ID {response.Data.Id} ha sido recibida y está en espera de autorización.");
 

@@ -50,11 +50,17 @@ namespace FinancialBudget.Server.Services.Core
         /// The GetAll
         /// </summary>
         /// <param name="filters">The filters<see cref="string"/></param>
-        /// <param name="includes">The includes<see cref="string[]?"/></param>
+        /// <param name="includes">The includes<see>
+        ///         <cref>string[]?</cref>
+        ///     </see>
+        /// </param>
         /// <param name="pageNumber">The pageNumber<see cref="int"/></param>
         /// <param name="pageSize">The pageSize<see cref="int"/></param>
         /// <param name="includeTotal">The pageSize<see cref="bool"/></param>
-        /// <returns>The <see cref="Response{List{TEntity}, List{ValidationFailure}}"/></returns>
+        /// <returns>The <see>
+        ///         <cref>Response{List{TEntity}, List{ValidationFailure}}</cref>
+        ///     </see>
+        /// </returns>
         public Response<List<TEntity>, List<ValidationFailure>> GetAll(string? filters, string[]? includes = null, int pageNumber = 1, int pageSize = 30, bool includeTotal = false)
         {
             Response<List<TEntity>, List<ValidationFailure>> response = new();
@@ -130,11 +136,17 @@ namespace FinancialBudget.Server.Services.Core
         /// The GetAll
         /// </summary>
         /// <param name="filters">The filters<see cref="string"/></param>
-        /// <param name="includes">The includes<see cref="string[]?"/></param>
+        /// <param name="includes">The includes<see>
+        ///         <cref>string[]?</cref>
+        ///     </see>
+        /// </param>
         /// <param name="pageNumber">The pageNumber<see cref="int"/></param>
         /// <param name="pageSize">The pageSize<see cref="int"/></param>
         /// <param name="includeTotal">The pageSize<see cref="bool"/></param>
-        /// <returns>The <see cref="Response{List{TEntity}, List{ValidationFailure}}"/></returns>
+        /// <returns>The <see>
+        ///         <cref>Response{List{TEntity}, List{ValidationFailure}}</cref>
+        ///     </see>
+        /// </returns>
         public Response<List<TEntity>, List<ValidationFailure>> GetAllWhitOutMetadata(string? filters, string[]? includes = null, int pageNumber = 1, int pageSize = 30, bool includeTotal = false)
         {
             Response<List<TEntity>, List<ValidationFailure>> response = new();
@@ -203,7 +215,10 @@ namespace FinancialBudget.Server.Services.Core
         /// The GetById
         /// </summary>
         /// <param name="id">The id<see cref="TId"/></param>
-        /// <param name="includes">The includes<see cref="string[]?"/></param>
+        /// <param name="includes">The includes<see>
+        ///         <cref>string[]?</cref>
+        ///     </see>
+        /// </param>
         /// <returns>The <see cref="Response{TEntity, List{ValidationFailure}}"/></returns>
         public Response<TEntity, List<ValidationFailure>> GetById(TId id, string[]? includes = null)
         {
