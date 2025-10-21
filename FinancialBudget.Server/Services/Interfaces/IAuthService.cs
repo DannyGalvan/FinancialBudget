@@ -1,7 +1,6 @@
 ﻿using FluentValidation.Results;
 using FinancialBudget.Server.Entities.Request;
 using FinancialBudget.Server.Entities.Response;
-using FinancialBudget.Server.Entities.Models;
 
 namespace FinancialBudget.Server.Services.Interfaces
 {

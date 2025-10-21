@@ -16,11 +16,19 @@
         /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddContextGroup(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<DataContext>(options =>
+            services.AddDbContext<DataContext>((sp, options) =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("default"))
-                    .EnableDetailedErrors()
-                    .EnableSensitiveDataLogging();
+                var env = sp.GetRequiredService<IHostEnvironment>();
+
+                options.UseNpgsql(configuration.GetConnectionString("default"));
+
+                if (env.IsDevelopment())
+                {
+                    options
+                        .EnableDetailedErrors()
+                        .EnableSensitiveDataLogging();
+                }
+                // En Producción (no Development) NO se activan estas opciones.
             });
 
             return services;

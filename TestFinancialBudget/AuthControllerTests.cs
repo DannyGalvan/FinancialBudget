@@ -37,6 +37,7 @@ namespace TestFinancialBudget
             var okResult = Assert.IsType<OkObjectResult>(result);
             var response = Assert.IsType<Response<AuthResponse>>(okResult.Value);
             Assert.True(response.Success);
+            Assert.NotNull(response.Data);
             Assert.Equal("user", response.Data.UserName);
         }
 
@@ -65,6 +66,7 @@ namespace TestFinancialBudget
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var response = Assert.IsType<Response<List<ValidationFailure>>>(badRequestResult.Value);
             Assert.False(response.Success);
+            Assert.NotNull(response.Data);
             Assert.Single(response.Data);
             Assert.Equal("Incorrect", response.Data[0].ErrorMessage);
         }
