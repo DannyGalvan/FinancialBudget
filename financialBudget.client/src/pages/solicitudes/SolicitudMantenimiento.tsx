@@ -227,6 +227,7 @@ export function Component() {
                     <div
                       key={solicitud.id}
                       className="grid grid-cols-7 gap-4 items-center py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                      data-testid={`solicitud-row-${solicitud.id}`}
                       onClick={() => handleSelectSolicitud(solicitud)}
                     >
                       <div className="flex items-center gap-3">
@@ -409,6 +410,7 @@ export function Component() {
                     </Button>
                     <Button
                       color="success"
+                      data-testid="approve-button"
                       startContent={
                         <Icon name="bi bi-check-circle" size={18} />
                       }

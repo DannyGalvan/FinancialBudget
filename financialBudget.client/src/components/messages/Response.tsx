@@ -25,7 +25,7 @@ export function Response({ message, type, complement }: ResponseProps) {
         !visible ? "opacity-0" : "opacity-100"
       }`}
     >
-      <div className="ml-1">
+      <div className="ml-1" data-testid="error-message">
         <p className="font-bold text-white">
           {message} {complement}
         </p>

@@ -99,6 +99,7 @@ export function Component() {
                 <Input
                   isRequired
                   className="py-4"
+                  data-testid="email-input"
                   errorMessage={errors?.userName}
                   id="email"
                   isInvalid={!!errors?.userName}
@@ -113,6 +114,7 @@ export function Component() {
                 <Input
                   isRequired
                   className="py-4"
+                  data-testid="password-input"
                   endContent={
                     <button
                       className="focus:outline-none"
@@ -137,11 +139,12 @@ export function Component() {
                   variant="bordered"
                   onChange={handleChange}
                 />
-                {/* <Checkbox>Soy estudiante en la plataforma</Checkbox> */}
+
                 <Button
                   fullWidth
                   className="py-4 mt-4 font-bold"
                   color="primary"
+                  data-testid="login-button"
                   isLoading={loading}
                   radius="md"
                   size="lg"
