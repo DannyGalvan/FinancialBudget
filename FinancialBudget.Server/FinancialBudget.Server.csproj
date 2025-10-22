@@ -52,6 +52,9 @@
 
   <Target Name="RunTestsBeforePublish" BeforeTargets="Publish">
     <Message Text="▶ Run tests..." Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+    <Message Text="▶ PASO 1: Tests Unitarios e Integracion (xunit)" Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
     <Exec Command="dotnet test &quot;%(UnitTestProjects.Identity)&quot; -c $(Configuration)" IgnoreStandardErrorWarningFormat="true" ContinueOnError="false" StandardOutputImportance="high">
       <Output TaskParameter="ExitCode" PropertyName="TestExitCode" />
     </Exec>
