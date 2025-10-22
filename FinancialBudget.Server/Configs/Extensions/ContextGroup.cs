@@ -20,15 +20,9 @@
             {
                 var env = sp.GetRequiredService<IHostEnvironment>();
 
-                options.UseNpgsql(configuration.GetConnectionString("default"));
-
-                if (env.IsDevelopment())
-                {
-                    options
-                        .EnableDetailedErrors()
-                        .EnableSensitiveDataLogging();
-                }
-                // En Producción (no Development) NO se activan estas opciones.
+                options.UseNpgsql(configuration.GetConnectionString("default"))
+                    .EnableDetailedErrors(env.IsDevelopment())
+                    .EnableSensitiveDataLogging(env.IsDevelopment());
             });
 
             return services;
