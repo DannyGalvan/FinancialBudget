@@ -52,9 +52,6 @@ namespace FinancialBudget.Server
 
             var app = builder.Build();
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
             // Configure the HTTP request pipeline.
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -81,7 +78,12 @@ namespace FinancialBudget.Server
 
             app.MapControllers();
 
-            app.MapFallbackToFile("/index.html");
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
+                app.MapFallbackToFile("/index.html");
+            }
 
             app.Run();
         }

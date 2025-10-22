@@ -1,14 +1,13 @@
-﻿using System.Security.Claims;
-using FinancialBudget.Server.Context;
-using FinancialBudget.Server.Entities.Response;
-using FinancialBudget.Server.Filters;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-namespace FinancialBudget.Server.Configs.Extensions
+﻿namespace FinancialBudget.Server.Configs.Extensions
 {
     using FinancialBudget.Server.Configs.Models;
+    using FinancialBudget.Server.Context;
+    using FinancialBudget.Server.Entities.Response;
+    using FinancialBudget.Server.Filters;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.Extensions.Primitives;
     using Microsoft.IdentityModel.Tokens;
+    using System.Security.Claims;
     using System.Text;
     using System.Text.Json;
 
@@ -22,6 +21,7 @@ namespace FinancialBudget.Server.Configs.Extensions
         /// </summary>
         /// <param name="services">The services<see cref="IServiceCollection"/></param>
         /// <param name="appSettingsConfig">The appSettingsConfig<see cref="AppSettings"/></param>
+        /// <param name="policySettings">The policySettings<see cref="PolicySettings"/></param>
         /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddJwtConfiguration(this IServiceCollection services,
             AppSettings appSettingsConfig, PolicySettings policySettings)
@@ -105,6 +105,5 @@ namespace FinancialBudget.Server.Configs.Extensions
 
             return services;
         }
-
     }
 }

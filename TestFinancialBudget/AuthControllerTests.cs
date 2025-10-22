@@ -1,10 +1,15 @@
-﻿using FinancialBudget.Server.Controllers;
+﻿using FinancialBudget.Server.Configs.Models;
+using FinancialBudget.Server.Controllers;
+using FinancialBudget.Server.Entities.Models;
 using FinancialBudget.Server.Entities.Request;
 using FinancialBudget.Server.Entities.Response;
+using FinancialBudget.Server.Services.Core;
 using FinancialBudget.Server.Services.Interfaces;
 using FluentValidation.Results;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace TestFinancialBudget
@@ -37,6 +42,7 @@ namespace TestFinancialBudget
             var okResult = Assert.IsType<OkObjectResult>(result);
             var response = Assert.IsType<Response<AuthResponse>>(okResult.Value);
             Assert.True(response.Success);
+            Assert.NotNull(response.Data);
             Assert.Equal("user", response.Data.UserName);
         }
 
@@ -65,8 +71,63 @@ namespace TestFinancialBudget
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var response = Assert.IsType<Response<List<ValidationFailure>>>(badRequestResult.Value);
             Assert.False(response.Success);
+            Assert.NotNull(response.Data);
             Assert.Single(response.Data);
             Assert.Equal("Incorrect", response.Data[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void GetToken_Returns_Valid_JWT_For_User()
+        {
+            // Arrange
+            var appSettings = new AppSettings
+            {
+                Secret = "supersecretkey1234567890ADFFFDASDF7845D4F6A5SD4F3A2SD1FASDFASDF",
+                TokenExpirationHrs = 1,
+                NotBefore = 0
+            };
+            var optionsMock = new Mock<IOptions<AppSettings>>();
+            optionsMock.Setup(x => x.Value).Returns(appSettings);
+
+            var loggerMock = new Mock<ILogger<AuthService>>();
+
+            var user = new User
+            {
+                Id = 1,
+                Email = "test@example.com",
+                Name = "Test User",
+                RolId = 2,
+                Password = "hashedpassword",
+                Rol = new Rol
+                {
+                    Id = 2,
+                    State = 1,
+                    RolOperations = new List<RolOperation>
+                    {
+                        new RolOperation { OperationId = 10, State = 1 },
+                        new RolOperation { OperationId = 20, State = 1 }
+                    }
+                }
+            };
+
+            // AuthService requiere otros parámetros, pero para GetToken solo necesitamos _appSettings y _logger
+            var authService = (AuthService)Activator.CreateInstance(
+                typeof(AuthService),
+                null, // _bd
+                optionsMock.Object,
+                null, // _loginValidations
+                null, // _mapper
+                loggerMock.Object
+            );
+
+            // Act
+            var token = typeof(AuthService)
+                .GetMethod("GetToken", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .Invoke(authService, new object[] { user }) as string;
+
+            // Assert
+            Assert.False(string.IsNullOrEmpty(token));
+            Assert.Contains(".", token); // JWT tiene al menos dos puntos
         }
     }
 }

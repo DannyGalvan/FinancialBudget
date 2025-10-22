@@ -64,7 +64,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
     },
-    port: 60263,
+    port: 3000,
     https: {
       key: readFileSync(keyFilePath),
       cert: readFileSync(certFilePath),

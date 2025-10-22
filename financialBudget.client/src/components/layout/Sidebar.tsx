@@ -95,10 +95,15 @@ export function Sidebar() {
         ref={sidebarRef as RefObject<HTMLDivElement> | null}
         animate={open ? "open" : "closed"}
         className="fixed z-[48] h-screen w-[16rem] max-w-[16rem] overflow-hidden bg-gradient-to-b from-[#0f4264] via-[#197BBD] to-[#1a7bb8] text-white shadow-2xl md:relative transition-all duration-300"
+        data-testid="sidebar"
         initial={{ x: isTabletMid ? -250 : 0 }}
         variants={Nav_animation}
         onMouseEnter={() => !isTabletMid && setOpen(true)}
-        onMouseLeave={() => !isTabletMid && localStorage.getItem("openSidebar") !== "true" && setOpen(false)}
+        onMouseLeave={() =>
+          !isTabletMid &&
+          localStorage.getItem("openSidebar") !== "true" &&
+          setOpen(false)
+        }
       >
         <Link
           viewTransition
@@ -124,8 +129,8 @@ export function Sidebar() {
                 }`}
                 to={nameRoutes.root}
               >
-                <Icon name="bi bi-house-door-fill" size={23} color="#197BBD"/>
-                {(open || isTabletMid) && <span>Home</span>}
+                <Icon color="#197BBD" name="bi bi-house-door-fill" size={23} />
+                {open || isTabletMid ? <span>Home</span> : null}
               </Link>
             </li>
             {open || isTabletMid ? (
@@ -135,49 +140,70 @@ export function Sidebar() {
                 </small>
                 <div className="flex flex-col gap-1">
                   {/* Dynamic Operations from Auth */}
-                  {operations?.map((menu) => 
+                  {operations?.map((menu) =>
                     menu.operations?.map((operation) => {
                       // Filtrar opciones específicas que no queremos mostrar
                       const hiddenPaths = [
-                        '/report/summarycitizenship',
-                        '/budgetitem/update',
-                        '/budget/update'
+                        "/report/summarycitizenship",
+                        "/budgetitem/update",
+                        "/budget/update",
                       ];
-                      
-                      const shouldHide = hiddenPaths.some(path => 
-                        operation.path.toLowerCase() === path.toLowerCase()
+
+                      const shouldHide = hiddenPaths.some(
+                        (path) =>
+                          operation.path.toLowerCase() === path.toLowerCase(),
                       );
-                      
-                      return operation.isVisible && !shouldHide && (
-                        <Link
-                          key={operation.id}
-                          viewTransition
-                          className={`link transition-all duration-300 capitalize ${
-                            pathname.toLowerCase() === operation.path.toLowerCase()
-                              ? "bg-[#f0f7ff] text-[#197BBD] shadow-lg"
-                              : "hover:bg-white/10 hover:text-white hover:shadow-md hover:scale-105"
-                          }`}
-                          to={operation.path}
-                        >
-                          <Icon name={operation.icon} size={20} color={pathname.toLowerCase() === operation.path.toLowerCase() ? "#197BBD" : "currentColor"} />
-                          <span>{operation.name}</span>
-                        </Link>
+
+                      console.log(operation.path, shouldHide, "renderizacion");
+
+                      return (
+                        operation.isVisible &&
+                        !shouldHide && (
+                          <Link
+                            key={operation.id}
+                            viewTransition
+                            className={`link transition-all duration-300 capitalize ${
+                              pathname.toLowerCase() ===
+                              operation.path.toLowerCase()
+                                ? "bg-[#f0f7ff] text-[#197BBD] shadow-lg"
+                                : "hover:bg-white/10 hover:text-white hover:shadow-md hover:scale-105"
+                            }`}
+                            data-testid={`sidebar-link-${operation.path}`}
+                            to={operation.path}
+                          >
+                            <Icon
+                              color={
+                                pathname.toLowerCase() ===
+                                operation.path.toLowerCase()
+                                  ? "#197BBD"
+                                  : "currentColor"
+                              }
+                              name={operation.icon}
+                              size={20}
+                            />
+                            <span>{operation.name}</span>
+                          </Link>
+                        )
                       );
-                    })
+                    }),
                   )}
                 </div>
               </div>
             ) : null}
           </ul>
-          
+
           {/* Logout Button */}
           <div className="px-3 pb-3 mt-auto pt-5">
-            <a 
-              className="link font-bold text-red-400 hover:text-red-300 hover:bg-red-500/20 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-3" 
+            <a
+              className="link font-bold text-red-400 hover:text-red-300 hover:bg-red-500/20 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-3"
               onClick={closeSesion}
             >
-              <Icon color="currentColor" name="bi bi-box-arrow-left" size={23} />
-              {(open || isTabletMid) && <span>Salir</span>}
+              <Icon
+                color="currentColor"
+                name="bi bi-box-arrow-left"
+                size={23}
+              />
+              {open || isTabletMid ? <span>Salir</span> : null}
             </a>
           </div>
 
@@ -186,15 +212,13 @@ export function Sidebar() {
             <div className="px-3 pb-12">
               <div className="flex items-center gap-3 p-3">
                 <div className="flex-shrink-0">
-                  <Icon name="bi bi-person-circle" size={40} color="197BBD" />
+                  <Icon color="197BBD" name="bi bi-person-circle" size={40} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-white truncate">
                     {name}
                   </p>
-                  <p className="text-xs text-white/80 truncate">
-                    {email}
-                  </p>
+                  <p className="text-xs text-white/80 truncate">{email}</p>
                 </div>
               </div>
             </div>

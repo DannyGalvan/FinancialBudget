@@ -213,6 +213,7 @@ export function Component() {
                     <div
                       key={solicitud.id}
                       className="grid grid-cols-7 gap-4 items-center py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                      data-testid={`solicitud-row-${solicitud.id}`}
                       onClick={() => {
                         setSelectedSolicitud(solicitud);
                         setIsModalOpen(true);

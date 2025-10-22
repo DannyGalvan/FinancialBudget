@@ -21,6 +21,7 @@
       <Version>8.*-*</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,5 +45,62 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <UnitTestProjects Include="..\TestFinancialBudget\TestFinancialBudget.csproj" />
+  </ItemGroup>
+
+  <Target Name="RunTestsBeforePublish" BeforeTargets="Publish">
+    <Message Text="▶ Run tests..." Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+    <Message Text="▶ PASO 1: Tests Unitarios e Integracion (xunit)" Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+    <Exec Command="dotnet test &quot;%(UnitTestProjects.Identity)&quot; -c $(Configuration)" IgnoreStandardErrorWarningFormat="true" ContinueOnError="false" StandardOutputImportance="high">
+      <Output TaskParameter="ExitCode" PropertyName="TestExitCode" />
+    </Exec>
+
+    <Error Text="❌ Tests fallaron. Publicación cancelada." Condition="'$(TestExitCode)' != '0'" />
+    <Message Text="✓ Todos los tests pasaron" Importance="high" Condition="'$(TestExitCode)' == '0'" />
+  </Target>
+
+  <Target Name="RunCypressTests" BeforeTargets="Publish"
+        AfterTargets="RunTestsBeforePublish">
+    <Message Text="" Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+    <Message Text="▶ PASO 2: Tests de Aceptación (Cypress)" Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+
+    <!-- Solo instalar si node_modules NO existe -->
+    <Message Text="Verificando dependencias npm..." Importance="high"
+             Condition="!Exists('$(SpaRoot)\node_modules')" />
+    <Exec Command="npm install --prefer-offline --no-audit"
+          WorkingDirectory="$(SpaRoot)"
+          StandardOutputImportance="low"
+          ContinueOnError="false"
+          Condition="!Exists('$(SpaRoot)\node_modules')" />
+
+    <Message Text="✓ Dependencias ya instaladas, saltando npm install" Importance="high"
+             Condition="Exists('$(SpaRoot)\node_modules')" />
+
+    <!-- Ejecutar tests de Cypress -->
+    <Exec Command="npm run cypress:run"
+          WorkingDirectory="$(SpaRoot)"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="high"
+          Timeout="300000">
+      <Output TaskParameter="ExitCode" PropertyName="CypressExitCode" />
+    </Exec>
+
+    <Error Text="❌ Tests de Cypress fallaron con código: $(CypressExitCode)"
+           Condition="'$(CypressExitCode)' != '0'" />
+    <Message Text="✓ Tests de aceptación (Cypress): OK"
+             Importance="high"
+             Condition="'$(CypressExitCode)' == '0'" />
+
+    <Message Text="" Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+    <Message Text="✓✓✓ TODOS LOS TESTS PASARON ✓✓✓" Importance="high" />
+    <Message Text="══════════════════════════════════════" Importance="high" />
+  </Target>
 
 </Project>

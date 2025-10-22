@@ -270,7 +270,7 @@ namespace FinancialBudget.Server.Context.Config
                  {
                      Id = 23,
                      RolId = 3,
-                     OperationId = 2,
+                     OperationId = 1,
                      State = 1,
                      CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                      CreatedBy = 1,
