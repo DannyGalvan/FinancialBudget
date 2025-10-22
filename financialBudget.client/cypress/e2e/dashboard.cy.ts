@@ -1,4 +1,4 @@
-describe("template spec", () => {
+describe("flujo de dashboard", () => {
   beforeEach(() => {
     cy.visit("/");
   });

@@ -1,4 +1,4 @@
-describe("template spec", () => {
+describe("flujo de eventos comunitarios", () => {
   beforeEach(() => {
     cy.visit("/");
   });

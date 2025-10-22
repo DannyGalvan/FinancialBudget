@@ -1,4 +1,4 @@
-describe("template spec", () => {
+describe("flujo de mantenimiento", () => {
   beforeEach(() => {
     cy.visit("/");
   });
