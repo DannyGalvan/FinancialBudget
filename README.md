@@ -11,10 +11,10 @@ Este repositorio proporciona una plantilla inicial para construir una aplicació
 - 🔐 Autenticación lista con JWT (`Microsoft.AspNetCore.Authentication.JwtBearer`)
 - 🔁 Automapeo de entidades con [Mapster](https://github.com/MapsterMapper/Mapster)
 - 💡 Inyección de dependencias ya configurada
-- 🗃️ Entity Framework Core + SQL Server
+- 🗃️ Entity Framework Core + PostgreSQL
 - 🧪 Validaciones con [FluentValidation](https://docs.fluentvalidation.net/)
 - 🔎 Documentación de API con Swagger (Swashbuckle)
-- 🔥 Logging estructurado con Serilog (con almacenamiento en SQL Server)
+- 🔥 Logging estructurado con Serilog (con almacenamiento en PostgreSQL)
 - ⚛️ Frontend en React + TypeScript
 - ⚙️ SPA Proxy configurado para desarrollo en simultáneo
 
