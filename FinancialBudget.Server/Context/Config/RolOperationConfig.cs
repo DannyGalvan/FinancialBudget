@@ -258,6 +258,17 @@ namespace FinancialBudget.Server.Context.Config
                 {
                     Id = 22,
                     RolId = 2,
+                    OperationId = 2,
+                    State = 1,
+                    CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                    CreatedBy = 1,
+                    UpdatedAt = null,
+                    UpdatedBy = null
+                },
+                new RolOperation
+                {
+                    Id = 23,
+                    RolId = 2,
                     OperationId = 5,
                     State = 1,
                     CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -268,7 +279,7 @@ namespace FinancialBudget.Server.Context.Config
                 //Rol Mantenimiento
                  new RolOperation
                  {
-                     Id = 23,
+                     Id = 24,
                      RolId = 3,
                      OperationId = 1,
                      State = 1,
@@ -277,9 +288,20 @@ namespace FinancialBudget.Server.Context.Config
                      UpdatedAt = null,
                      UpdatedBy = null
                  },
+                 new RolOperation
+                 {
+                     Id = 25,
+                     RolId = 3,
+                     OperationId = 2,
+                     State = 1,
+                     CreatedAt = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                     CreatedBy = 1,
+                     UpdatedAt = null,
+                     UpdatedBy = null
+                 },
                 new RolOperation
                 {
-                    Id = 24,
+                    Id = 26,
                     RolId = 3,
                     OperationId = 5,
                     State = 1,
