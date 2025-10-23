@@ -1,4 +1,4 @@
-# 🧩 Base Project: .NET Core + React + TypeScript
+# 🧩 Proyecto Base: .NET Core + React + TypeScript
 
 Este repositorio proporciona una plantilla inicial para construir una aplicación web moderna utilizando **.NET Core (API)** y **React con TypeScript (frontend)**. La solución ya viene configurada con autenticación, mapeo de entidades, inyección de dependencias y acceso a base de datos usando Entity Framework.
 
@@ -27,33 +27,33 @@ Este repositorio proporciona una plantilla inicial para construir una aplicació
 - Manejo global de estado con **Zustand**
 - Llamadas HTTP con **Axios**
 - Caché y control de datos con **React Query**
+- Pruebas de aceptacion con **cypress**
 - ESLint + Prettier configurados
 
 ---
 
 ## 📁 Estructura del proyecto
 
-### Servidor `.NET Core` – `Project.Server`
+### Servidor `.NET Core` – `FinancialBudget.Server`
+```
+FinancialBudget.Server/
+├── Configs/          # Configuraciones de servicios, JWT, CORS, etc.
+├── Context/          # DbContext de EF Core
+├── Controllers/      # Endpoints HTTP (incluye AuthController, etc.)
+├── Entities/         # Entidades del dominio
+├── Interceptors/     # Middleware personalizado
+├── Mappers/          # Configuración de Mapster
+├── Services/         # Lógica de negocio
+├── Utils/            # Utilidades generales
+├── Validations/      # Validaciones con FluentValidation
+├── appsettings.json  # Configuración de entorno
+├── Program.cs        # Punto de entrada y configuración general
+└── web.config        # Configuración para IIS
+```
 
-Project.Server
-├── Configs # Configuraciones de servicios, JWT, CORS, etc.
-├── Context # DbContext de EF Core
-├── Controllers # Endpoints HTTP (incluye AuthController, etc.)
-├── Entities # Entidades del dominio
-├── Interceptors # Middleware personalizado
-├── Mappers # Configuración de Mapster
-├── Services # Lógica de negocio
-├── Utils # Utilidades generales
-├── Validations # Validaciones con FluentValidation
-├── appsettings.json # Configuración de entorno
-├── Program.cs # Punto de entrada y configuración general
-├── web.config # Configuración para IIS
-
-## Frontend (project.client)
-arduino
-Copiar
-Editar
-project.client/
+### Frontend `financialBudget.client`
+```
+financialBudget.client/
 ├── public/
 ├── src/
 │   ├── assets/
@@ -76,6 +76,16 @@ project.client/
 ├── tsconfig.json
 ├── package.json
 └── README.md
+```
+
+---
+
+### Test `TestFinancialBudget`
+```
+TestFinancialBudget/
+```
+
+---
 
 ## 🛠️ Requisitos
 
@@ -89,13 +99,46 @@ project.client/
 Ejecuta los siguientes comandos en las respectivas carpetas:
 
 ### 🔧 Backend (.NET Core)
-
+```bash
 dotnet restore
+```
 
 ### 💻 Frontend (React + TypeScript)
-
+```bash
 npm install
+```
 
-### 📌 Nota
-Este proyecto sirve como plantilla base para acelerar el desarrollo de aplicaciones completas sin tener que preocuparse por la configuración inicial. Ideal para proyectos empresariales o personales.
+---
 
+## 🧪 Pruebas del proyecto
+
+Ejecuta los siguientes comandos en las respectivas carpetas:
+
+### 🔧 Backend (.NET Core)
+```bash
+dotnet test
+```
+
+### 💻 Frontend (React + TypeScript)
+```bash
+npm run cypress:open 'prepara el entorno para crear nuevas o ejecutar las ya existentes en vivo'
+npm run cypress:run 'ejecuta todas las pruebas'
+```
+
+---
+
+## ▶️ Ejecucion del proyecto
+
+Ejecuta los siguientes comandos en las respectivas carpetas:
+
+### 🔧 Backend (.NET Core)
+```bash
+dotnet run 
+```
+
+### 💻 Frontend (React + TypeScript)
+```bash
+npm run dev
+```
+
+---
