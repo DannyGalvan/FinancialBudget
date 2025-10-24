@@ -355,6 +355,11 @@ namespace FinancialBudget.Server.Services.Core
                     }
 
                     response = interceptor.Execute(response, model);
+
+                    if (!response.Success)
+                    {
+                        throw new Exception(response.Message);
+                    }
                 }
 
                 // Commit solo si hay transacción
@@ -471,6 +476,11 @@ namespace FinancialBudget.Server.Services.Core
                     }
 
                     response = interceptor.Execute(response, model, prevState);
+
+                    if (!response.Success)
+                    {
+                        throw new Exception(response.Message);
+                    }
                 }
 
                 transaction?.Commit();
