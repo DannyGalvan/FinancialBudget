@@ -62,14 +62,12 @@ namespace FinancialBudget.Server
 
             app.UseCors(options =>
             {
-                options.WithOrigins(
-                    "https://localhost",
-                    "http://localhost:4200",
-                    "http://localhost"
-                );
-                options.AllowAnyHeader();
-                options.AllowAnyMethod();
-                options.AllowCredentials();
+                var origins = configuration.GetSection("Origins").Get<List<string>>() ?? [];
+
+                options.WithOrigins(origins.ToArray())
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
             });
 
             app.UseAuthentication();

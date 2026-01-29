@@ -21,7 +21,7 @@ describe("flujo de eventos comunitarios", () => {
     cy.contains("Gestion de Eventos Comunitarios").should("be.visible");
 
     //click en una solicitud de evento comunitario
-    cy.get('[data-testid="solicitud-row-27"]').click();
+    cy.get('[data-testid="solicitud-row-24"]').click();
     //aprobar la solicitud
     // cy.get('[data-testid="approve-button"]').click();
     // //verificar si fue aprobada
